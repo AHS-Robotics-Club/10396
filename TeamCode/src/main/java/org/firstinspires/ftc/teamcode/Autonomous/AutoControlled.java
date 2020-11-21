@@ -125,6 +125,9 @@ public class AutoControlled extends LinearOpMode {
             robot.navigate(0.2);
         }
 
+        robot.setTargetRotation(180);
+        robot.navigate(0.2);
+
         //strafe left 32 inches
         robot.setTargetInches(-32, 32, 32, -32);
         robot.navigate(0.1);
