@@ -33,9 +33,9 @@ public class AutoControlled extends LinearOpMode {
 
         vision = new UGRectDetector(hardwareMap, "camera");
         vision.init();
-        vision.setTopRectangle(0.1, 0.22890625);
-        vision.setBottomRectangle(0.20555555555555555, 0.2328125);
-        vision.setRectangleSize(200, 42);
+        vision.setTopRectangle(0.47686832740213525, 0.2947686116700201);
+        vision.setBottomRectangle(0.5782918149466192, 0.29979879275653926);
+        vision.setRectangleSize(200, 35);
 
         AutoCommands robot = new AutoCommands(frontLeft, frontRight, backLeft, backRight, shooter, intake, grabberLift, grabber, flicker, voltageSensor);
         robot.initialize();
