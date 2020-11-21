@@ -25,7 +25,7 @@ public class AutoControlled extends LinearOpMode {
         shooter = new Motor(hardwareMap, "shooter");
         intake = new Motor(hardwareMap, "intake");
         grabberLift = new Motor(hardwareMap, "grabberLift");
-        
+
         grabber = new CRServo(hardwareMap, "grabber");
         flicker = new CRServo(hardwareMap, "flicker");
 
@@ -55,9 +55,9 @@ public class AutoControlled extends LinearOpMode {
             telemetry.addData("Vision", 4);
             telemetry.update();
 
-            //move forward 9 feet
-            robot.setTargetInches((int)(9 * 12));
-            robot.navigate(0.25);
+            //move forward 10 feet
+            robot.setTargetInches((int)(10 * 12));
+            robot.navigate(0.2);
 
             //strafe right 1 feet
             robot.setTargetInches(12, -12, -12, 12);
@@ -71,8 +71,8 @@ public class AutoControlled extends LinearOpMode {
             robot.navigate(0.1);
 
             //move backward 4 feet
-            robot.setTargetInches((int)(-4 * 12));
-            robot.navigate(0.25);
+            robot.setTargetInches((int)(-5 * 12));
+            robot.navigate(0.2);
         }
 
         if (visionDec == 0){
@@ -82,7 +82,7 @@ public class AutoControlled extends LinearOpMode {
 
             //move forward 6 feet
             robot.setTargetInches((int)(6 * 12));
-            robot.navigate(0.25);
+            robot.navigate(0.2);
 
             //strafe right 1 feet
             robot.setTargetInches(12, -12, -12, 12);
@@ -94,6 +94,10 @@ public class AutoControlled extends LinearOpMode {
             //strafe left 1 feet
             robot.setTargetInches(-12, 12, 12, -12);
             robot.navigate(0.1);
+
+            //move backward 1 feet
+            robot.setTargetInches(-12, -12, -12, -12);
+            robot.navigate(0.2);
         }
 
         if (visionDec == 1){
@@ -103,7 +107,7 @@ public class AutoControlled extends LinearOpMode {
 
             //move forward 8 feet
             robot.setTargetInches((int)(8 * 12));
-            robot.navigate(0.25);
+            robot.navigate(0.2);
 
             //strafe left 2 feet
             robot.setTargetInches(-24, 24, 24, -24);
@@ -117,9 +121,34 @@ public class AutoControlled extends LinearOpMode {
             robot.navigate(0.1);
 
             //move backward 2 feet
-            robot.setTargetInches((int)(-2 * 12));
-            robot.navigate(0.25);
+            robot.setTargetInches((int)(-3 * 12));
+            robot.navigate(0.2);
         }
+
+        //strafe left 32 inches
+        robot.setTargetInches(-32, 32, 32, -32);
+        robot.navigate(0.1);
+
+        //shoot ring
+        robot.shoot();
+
+        //strafe left 8 inches
+        robot.setTargetInches(-8, 8, 8, -8);
+        robot.navigate(0.1);
+
+        //shoot ring
+        robot.shoot();
+
+        //strafe left 8 inches
+        robot.setTargetInches(-8, 8, 8, -8);
+        robot.navigate(0.1);
+
+        //shoot ring
+        robot.shoot();
+
+        //park on the line
+        robot.setTargetInches(12, 12, 12, 12);
+        robot.navigate(0.2);
 
         //stop motors
         robot.stopMotors();
