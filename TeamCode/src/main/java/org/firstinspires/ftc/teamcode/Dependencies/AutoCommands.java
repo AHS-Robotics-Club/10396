@@ -96,23 +96,16 @@ public class AutoCommands extends AutoControlled {
     }
 
     public void setTargetInches(double inchesFL, double inchesFR, double inchesBL, double inchesBR){
-        fR.motor.setTargetPosition((int) (inchesFR * ticksPerInch * 1.5));
-        fL.motor.setTargetPosition((int) (inchesFL * ticksPerInch * 1.5));
-        bR.motor.setTargetPosition((int) (inchesBR * ticksPerInch * 1.5));
-        bL.motor.setTargetPosition((int) (inchesBL * ticksPerInch * 1.5));
-    }
-
-    public void setTargetInches(double inchesFL, double inchesFR, double inchesBL, double inchesBR, boolean strafe){
-        if (!strafe) {
-            fR.motor.setTargetPosition((int) (inchesFR * ticksPerInch * 1.5));
-            fL.motor.setTargetPosition((int) (inchesFL * ticksPerInch * 1.5));
-            bR.motor.setTargetPosition((int) (inchesBR * ticksPerInch * 1.5));
-            bL.motor.setTargetPosition((int) (inchesBL * ticksPerInch * 1.5));
-        } else {
+        if ((inchesFL < 0 && inchesBR < 0 && inchesFR > 0 && inchesBL > 0) || (inchesFL > 0 && inchesBR > 0 && inchesFR < 0 && inchesBL < 0)) {
             fR.motor.setTargetPosition((int) (inchesFR * ticksPerInch * 1.5 * 1.2972973));
             fL.motor.setTargetPosition((int) (inchesFL * ticksPerInch * 1.5 * 1.2972973));
             bR.motor.setTargetPosition((int) (inchesBR * ticksPerInch * 1.5 * 1.2972973));
             bL.motor.setTargetPosition((int) (inchesBL * ticksPerInch * 1.5 * 1.2972973));
+        } else {
+            fR.motor.setTargetPosition((int) (inchesFR * ticksPerInch * 1.5));
+            fL.motor.setTargetPosition((int) (inchesFL * ticksPerInch * 1.5));
+            bR.motor.setTargetPosition((int) (inchesBR * ticksPerInch * 1.5));
+            bL.motor.setTargetPosition((int) (inchesBL * ticksPerInch * 1.5));
         }
     }
 
