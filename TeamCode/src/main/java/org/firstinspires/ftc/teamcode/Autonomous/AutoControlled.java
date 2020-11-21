@@ -128,14 +128,14 @@ public class AutoControlled extends LinearOpMode {
         robot.setTargetRotation(180);
         robot.navigate(0.2);
 
-        //strafe left 32 inches
-        robot.setTargetInches(-32, 32, 32, -32);
+        //strafe left 24 inches
+        robot.setTargetInches(-24, 24, 24, -24);
         robot.navigate(0.1);
 
-        //shoot ring
-        robot.shoot();
+        //get shooter up to speed
+        robot.prepShooter();
 
-        //strafe left 8 inches
+        //navigate to first shot
         robot.setTargetInches(-8, 8, 8, -8);
         robot.navigate(0.1);
 
@@ -148,6 +148,16 @@ public class AutoControlled extends LinearOpMode {
 
         //shoot ring
         robot.shoot();
+
+        //strafe left 8 inches
+        robot.setTargetInches(-8, 8, 8, -8);
+        robot.navigate(0.1);
+
+        //shoot ring
+        robot.shoot();
+
+        //stop shooter
+        robot.stopShooter();
 
         //park on the line
         robot.setTargetInches(12, 12, 12, 12);
