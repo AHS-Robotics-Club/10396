@@ -9,13 +9,13 @@ import org.firstinspires.ftc.teamcode.Autonomous.AutoControlled;
 public class AutoCommands extends AutoControlled {
     private Motor fL, fR, bL, bR;
     private Motor shooter, intake, lift;
-    private CRServo grabber;
+    private CRServo grabber, flicker;
     private int tolerance;
     private VoltageSensor voltageSensor;
 
     public double ticksPerInch = 145.6/((96/25.4)*Math.PI);
 
-    public AutoCommands(Motor fLM, Motor fRM, Motor bLM, Motor bRM, Motor shooterM, Motor intakeM, Motor lifter, CRServo grab, VoltageSensor volt){
+    public AutoCommands(Motor fLM, Motor fRM, Motor bLM, Motor bRM, Motor shooterM, Motor intakeM, Motor lifter, CRServo grab, CRServo flick, VoltageSensor volt){
         fL = fLM;
         fR = fRM;
         bL = bLM;
@@ -26,6 +26,7 @@ public class AutoCommands extends AutoControlled {
         voltageSensor = volt;
         lift = lifter;
         grabber = grab;
+        flicker = flick;
     }
 
     public void initialize(){
@@ -38,6 +39,14 @@ public class AutoCommands extends AutoControlled {
         fR.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bL.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bR.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        fL.set(0);
+        fR.set(0);
+        bL.set(0);
+        bR.set(0);
+        lift.set(0);
+        shooter.set(0);
     }
 
     public void resetDriveTrainEncoders(){
@@ -53,6 +62,16 @@ public class AutoCommands extends AutoControlled {
         bR.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bL.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooter.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public void dropWobbleGoal(){
+        lift.set((13/voltageSensor.getVoltage()) * -0.4);
+        sleep(1000);
+        lift.set(0);
+        grabber.set((13/voltageSensor.getVoltage()) * -1);
+        lift.set((13/voltageSensor.getVoltage()) * 0.4);
+        sleep(1000);
+        lift.set(0);
     }
 
     public void setTarget(int ticks){
@@ -131,7 +150,9 @@ public class AutoCommands extends AutoControlled {
         tolerance = toleranceParam;
     }
 
-    public void navigate(double speed, boolean reverse, boolean strafeLeft, boolean strafeRight, boolean rotateLeft, boolean rotateRight){
+    public void navigate(double speed){
+        resetDriveTrainEncoders();
+
         fR.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         fL.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         bR.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -139,31 +160,31 @@ public class AutoCommands extends AutoControlled {
 
         double adjustedSpeed = (13/voltageSensor.getVoltage()) * speed;
 
-        if (reverse) {
+        if (fL.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() < 0 && bL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0) {
             fR.set(-adjustedSpeed);
             bL.set(-adjustedSpeed);
             bR.set(-adjustedSpeed);
             sleep(70);
             fL.set(-adjustedSpeed);
-        } else if (strafeLeft) {
+        } else if (fL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 & bL.motor.getTargetPosition() > 0) {
             fR.set(adjustedSpeed);
             bL.set(adjustedSpeed);
             bR.set(-adjustedSpeed);
             sleep(70);
             fL.set(-adjustedSpeed);
-        } else if (strafeRight) {
+        } else if (fL.motor.getTargetPosition() > 0 && bR.motor.getTargetPosition() > 0 && fR.motor.getTargetPosition() < 0 & bL.motor.getTargetPosition() < 0) {
             fR.set(-adjustedSpeed);
             bL.set(-adjustedSpeed);
             bR.set(adjustedSpeed);
             sleep(70);
             fL.set(adjustedSpeed);
-        } else if (rotateLeft) {
+        } else if (fL.motor.getTargetPosition() < 0 && bL.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 && bR.motor.getTargetPosition() > 0) {
             fR.set(adjustedSpeed);
             bL.set(-adjustedSpeed);
             bR.set(adjustedSpeed);
             sleep(70);
             fL.set(-adjustedSpeed);
-        } else if (rotateRight) {
+        } else if (fL.motor.getTargetPosition() > 0 && bL.motor.getTargetPosition() > 0 && bR.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() < 0) {
             fR.set(-adjustedSpeed);
             bL.set(adjustedSpeed);
             bR.set(-adjustedSpeed);
@@ -180,10 +201,12 @@ public class AutoCommands extends AutoControlled {
         while (fL.motor.isBusy()){
             idle();
         }
+
         fL.set(0);
         fR.set(0);
         bL.set(0);
         bR.set(0);
+
         resetDriveTrainEncoders();
     }
 
