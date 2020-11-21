@@ -6,11 +6,11 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class TeleBot {
-    private Motor fL, fR, bL, bR, shooter, intake;
+    private Motor fL, fR, bL, bR, shooter, intake, lifter;
     private RevIMU imu;
-    private CRServo flick;
+    private CRServo flick, grabber;
 
-    public TeleBot(Motor frontLeft, Motor frontRight, Motor backLeft, Motor backRight, Motor intakeParam, Motor shooterParam, RevIMU imuParam, CRServo flicker) {
+    public TeleBot(Motor frontLeft, Motor frontRight, Motor backLeft, Motor backRight, Motor intakeParam, Motor shooterParam, Motor lift, CRServo grab, RevIMU imuParam, CRServo flicker) {
         fL = frontLeft;
         fR = frontRight;
         bL = backLeft;
@@ -19,6 +19,8 @@ public class TeleBot {
         intake = intakeParam;
         imu = imuParam;
         flick = flicker;
+        grabber = grab;
+        lifter = lift;
     }
 
     public void initialize(){
@@ -28,6 +30,7 @@ public class TeleBot {
         bR.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shooter.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intake.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        lifter.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         fL.set(0);
         fR.set(0);
@@ -35,7 +38,9 @@ public class TeleBot {
         bR.set(0);
         shooter.set(0);
         intake.set(0);
+        lifter.set(0);
 
+        grabber.set(0);
         flick.set(0);
 
         fL.resetEncoder();
@@ -44,6 +49,7 @@ public class TeleBot {
         bR.resetEncoder();
         shooter.resetEncoder();
         intake.resetEncoder();
+        lifter.resetEncoder();
 
         imu.init();
     }
