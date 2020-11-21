@@ -62,6 +62,8 @@ public class AutoControlled extends LinearOpMode {
             visionDec = vision.getStack();
         }
 
+        //run main code here
+        
         if (visionDec == 4){
             telemetry.addData("Path", 4);
             telemetry.update();
@@ -76,7 +78,7 @@ public class AutoControlled extends LinearOpMode {
             telemetry.addData("Path", 1);
             telemetry.update();
         }
-//random comment
+
         //robot.resetDriveTrainEncoders();
         //robot.setTargetInches(24);
         //robot.setTolerance(0);
@@ -92,10 +94,10 @@ public class AutoControlled extends LinearOpMode {
         //robot.setTolerance(0);
         //robot.navigate(0.3, true, false, false);
 
-        robot.resetDriveTrainEncoders();
-        robot.setTargetInches(9*Math.PI, 9*-Math.PI, 9*Math.PI, 9*-Math.PI, false);
-        robot.setTolerance(0);
-        robot.navigate(0.3, false, false, false, false, true);
+        //robot.resetDriveTrainEncoders();
+        //robot.setTargetInches(9*Math.PI, 9*-Math.PI, 9*Math.PI, 9*-Math.PI);
+        //robot.setTolerance(0);
+        //robot.navigate(0.3, false, false, false, false, true);
 
 
         //test rotate
