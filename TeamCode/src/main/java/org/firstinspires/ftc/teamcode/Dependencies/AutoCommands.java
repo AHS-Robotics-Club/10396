@@ -72,6 +72,13 @@ public class AutoCommands extends AutoControlled {
         bL.motor.setTargetPosition((int)(inches * ticksPerInch * 1.5));
     }
 
+    public void setTargetInches(double inchesFL, double inchesFR, double inchesBL, double inchesBR){
+        fR.motor.setTargetPosition((int) (inchesFR * ticksPerInch * 1.5));
+        fL.motor.setTargetPosition((int) (inchesFL * ticksPerInch * 1.5));
+        bR.motor.setTargetPosition((int) (inchesBR * ticksPerInch * 1.5));
+        bL.motor.setTargetPosition((int) (inchesBL * ticksPerInch * 1.5));
+    }
+
     public void setTargetInches(double inchesFL, double inchesFR, double inchesBL, double inchesBR, boolean strafe){
         if (!strafe) {
             fR.motor.setTargetPosition((int) (inchesFR * ticksPerInch * 1.5));
@@ -150,7 +157,7 @@ public class AutoCommands extends AutoControlled {
             fL.set(adjustedSpeed);
         }
 
-        while (fL.motor.isBusy()){//(Math.abs(Math.abs(fL.motor.getTargetPosition()) - Math.abs(fL.motor.getCurrentPosition())) > tolerance) || (Math.abs(Math.abs(fR.motor.getTargetPosition()) - Math.abs(fR.motor.getCurrentPosition())) > tolerance) || (Math.abs(Math.abs(bL.motor.getTargetPosition()) - Math.abs(bL.motor.getCurrentPosition())) > tolerance) || (Math.abs(Math.abs(bR.motor.getTargetPosition()) - Math.abs(bR.motor.getCurrentPosition())) > tolerance)) {
+        while (fL.motor.isBusy()){
             idle();
         }
         fL.set(0);
