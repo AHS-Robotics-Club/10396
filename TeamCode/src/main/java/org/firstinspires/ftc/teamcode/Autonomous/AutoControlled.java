@@ -59,14 +59,14 @@ public class AutoControlled extends LinearOpMode {
             robot.navigate(0.3);
 
             //strafe right 12 inches at 0.1 speed
-            robot.setTargetInches(12, -12, -12, 12, true);
+            robot.setTargetInches(12, -12, -12, 12);
             robot.navigate(0.1);
 
             //drop the wobble goal
             robot.dropWobbleGoal();
 
             //strafe left 1 feet at 0.1 speed
-            robot.setTargetInches(-12, 12, 12, -12, true);
+            robot.setTargetInches(-12, 12, 12, -12);
             robot.navigate(0.1);
 
             //move backward 4 feet at 0.3 speed
@@ -84,14 +84,14 @@ public class AutoControlled extends LinearOpMode {
             robot.navigate(0.3);
 
             //strafe right 12 inches at 0.1 speed
-            robot.setTargetInches(12, -12, -12, 12, true);
+            robot.setTargetInches(12, -12, -12, 12);
             robot.navigate(0.1);
 
             //drop the wobble goal
             robot.dropWobbleGoal();
 
             //strafe left 1 feet at 0.1 speed
-            robot.setTargetInches(-12, 12, 12, -12, true);
+            robot.setTargetInches(-12, 12, 12, -12);
             robot.navigate(0.1);
         }
 
@@ -105,14 +105,14 @@ public class AutoControlled extends LinearOpMode {
             robot.navigate(0.3);
 
             //strafe left 2 feet at 0.1 speed
-            robot.setTargetInches(-24, 24, 24, -24, true);
+            robot.setTargetInches(-24, 24, 24, -24);
             robot.navigate(0.1);
 
             //drop the wobble goal
             robot.dropWobbleGoal();
 
             //strafe right 2 feet at 0.1 speed
-            robot.setTargetInches(24, -24, -24, 24, true);
+            robot.setTargetInches(24, -24, -24, 24);
             robot.navigate(0.1);
 
             //move backward 2 feet at 0.3 speed
@@ -122,6 +122,5 @@ public class AutoControlled extends LinearOpMode {
 
         //stop motors
         robot.stopMotors();
-
     }
 }
