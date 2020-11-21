@@ -93,6 +93,22 @@ public class AutoCommands extends AutoControlled {
         }
     }
 
+    public void setTargetRotation(int degrees){
+        if (degrees < 0) {
+            fL.motor.setTargetPosition((int)(-(degrees/10)*Math.PI * ticksPerInch * 1.5));
+            fR.motor.setTargetPosition((int)((degrees/10)*Math.PI * ticksPerInch * 1.5));
+            bL.motor.setTargetPosition((int)(-(degrees/10)*Math.PI * ticksPerInch * 1.5));
+            bR.motor.setTargetPosition((int)((degrees/10)*Math.PI * ticksPerInch * 1.5));
+        }
+        if (degrees > 0) {
+            fL.motor.setTargetPosition((int)((degrees/10)*Math.PI * ticksPerInch * 1.5));
+            fR.motor.setTargetPosition((int)(-(degrees/10)*Math.PI * ticksPerInch * 1.5));
+            bL.motor.setTargetPosition((int)((degrees/10)*Math.PI * ticksPerInch * 1.5));
+            bR.motor.setTargetPosition((int)(-(degrees/10)*Math.PI * ticksPerInch * 1.5));
+        }
+
+    }
+
     public void setTargetFeet(int feet){
         fR.motor.setTargetPosition((int)(feet * 12 * ticksPerInch * 1.5));
         fL.motor.setTargetPosition((int)(feet * 12 * ticksPerInch * 1.5));
