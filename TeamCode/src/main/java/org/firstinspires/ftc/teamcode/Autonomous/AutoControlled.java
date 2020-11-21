@@ -54,24 +54,24 @@ public class AutoControlled extends LinearOpMode {
             telemetry.addData("Vision", 4);
             telemetry.update();
 
-            //move forward 9 feet at 0.3 speed
+            //move forward 9 feet
             robot.setTargetInches((int)(9 * 12));
-            robot.navigate(0.3);
+            robot.navigate(0.25);
 
-            //strafe right 12 inches at 0.1 speed
+            //strafe right 1 feet
             robot.setTargetInches(12, -12, -12, 12);
             robot.navigate(0.1);
 
             //drop the wobble goal
             robot.dropWobbleGoal();
 
-            //strafe left 1 feet at 0.1 speed
+            //strafe left 1 feet
             robot.setTargetInches(-12, 12, 12, -12);
             robot.navigate(0.1);
 
-            //move backward 4 feet at 0.3 speed
+            //move backward 4 feet
             robot.setTargetInches((int)(-4 * 12));
-            robot.navigate(0.3);
+            robot.navigate(0.25);
         }
 
         if (visionDec == 0){
@@ -79,18 +79,18 @@ public class AutoControlled extends LinearOpMode {
             telemetry.addData("Vision", 0);
             telemetry.update();
 
-            //move forward 6 feet at 0.3 speed
+            //move forward 6 feet
             robot.setTargetInches((int)(6 * 12));
-            robot.navigate(0.3);
+            robot.navigate(0.25);
 
-            //strafe right 12 inches at 0.1 speed
+            //strafe right 1 feet
             robot.setTargetInches(12, -12, -12, 12);
             robot.navigate(0.1);
 
             //drop the wobble goal
             robot.dropWobbleGoal();
 
-            //strafe left 1 feet at 0.1 speed
+            //strafe left 1 feet
             robot.setTargetInches(-12, 12, 12, -12);
             robot.navigate(0.1);
         }
@@ -100,24 +100,24 @@ public class AutoControlled extends LinearOpMode {
             telemetry.addData("Vision", 1);
             telemetry.update();
 
-            //move forward 8 feet at 0.3 speed
+            //move forward 8 feet
             robot.setTargetInches((int)(8 * 12));
-            robot.navigate(0.3);
+            robot.navigate(0.25);
 
-            //strafe left 2 feet at 0.1 speed
+            //strafe left 2 feet
             robot.setTargetInches(-24, 24, 24, -24);
             robot.navigate(0.1);
 
             //drop the wobble goal
             robot.dropWobbleGoal();
 
-            //strafe right 2 feet at 0.1 speed
+            //strafe right 2 feet
             robot.setTargetInches(24, -24, -24, 24);
             robot.navigate(0.1);
 
-            //move backward 2 feet at 0.3 speed
+            //move backward 2 feet at 0.25 speed
             robot.setTargetInches((int)(-2 * 12));
-            robot.navigate(0.3);
+            robot.navigate(0.25);
         }
 
         //stop motors
