@@ -8,13 +8,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.teamcode.Dependencies.AutoCommands;
 
-import java.time.chrono.MinguoChronology;
-
 @Autonomous(name="Autonomous")
 public class AutoControlled extends LinearOpMode {
 
     private Motor frontLeft, frontRight, backLeft, backRight, shooter, intake, grabberLift;
-    private CRServo grabber;
+    private CRServo grabber, flicker;
     public VoltageSensor voltageSensor;
     public UGRectDetector vision;
 
@@ -27,7 +25,8 @@ public class AutoControlled extends LinearOpMode {
         shooter = new Motor(hardwareMap, "shooter");
         intake = new Motor(hardwareMap, "intake");
         grabberLift = new Motor(hardwareMap, "grabberLift");
-        grabber = new CRServo(hardwareMap, "flicker");
+        grabber = new CRServo(hardwareMap, "grabber");
+        flicker = new CRServo(hardwareMap, "flicker");
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
@@ -37,7 +36,7 @@ public class AutoControlled extends LinearOpMode {
         vision.setBottomRectangle(0.20555555555555555, 0.2328125);
         vision.setRectangleSize(200, 42);
 
-        AutoCommands robot = new AutoCommands(frontLeft, frontRight, backLeft, backRight, shooter, intake, grabberLift, grabber, voltageSensor);
+        AutoCommands robot = new AutoCommands(frontLeft, frontRight, backLeft, backRight, shooter, intake, grabberLift, grabber, flicker, voltageSensor);
         robot.initialize();
 
         waitForStart();
@@ -51,105 +50,77 @@ public class AutoControlled extends LinearOpMode {
         }
 
         if (visionDec == 4){
-            telemetry.addData("Path", 4);
+            //telemetry for vision
+            telemetry.addData("Vision", 4);
             telemetry.update();
-//positive = grab
-            robot.resetDriveTrainEncoders();
+
+            //move forward 9 feet at 0.3 speed
             robot.setTargetInches((int)(9 * 12));
-            robot.setTolerance(10);
-            robot.navigate(0.3, false, false, false, false, false);
+            robot.navigate(0.3);
 
-            robot.resetDriveTrainEncoders();
+            //strafe right 12 inches at 0.1 speed
             robot.setTargetInches(12, -12, -12, 12, true);
-            robot.setTolerance(10);
-            robot.navigate(0.1, false, false, true, false, false);
+            robot.navigate(0.1);
 
-            grabberLift.set((13/voltageSensor.getVoltage()) * -0.4);
-            sleep(1000);
-            grabberLift.set(0);
+            //drop the wobble goal
+            robot.dropWobbleGoal();
 
-            grabber.set((13/voltageSensor.getVoltage()) * -1);
-
-            grabberLift.set((13/voltageSensor.getVoltage()) * 0.4);
-            sleep(1000);
-            grabberLift.set(0);
-
-            robot.resetDriveTrainEncoders();
+            //strafe left 1 feet at 0.1 speed
             robot.setTargetInches(-12, 12, 12, -12, true);
-            robot.setTolerance(10);
-            robot.navigate(0.1, false, true, false, false, false);
+            robot.navigate(0.1);
 
-            robot.resetDriveTrainEncoders();
+            //move backward 4 feet at 0.3 speed
             robot.setTargetInches((int)(-4 * 12));
-            robot.setTolerance(10);
-            robot.navigate(0.3, true, false, false, false, false);
+            robot.navigate(0.3);
         }
 
         if (visionDec == 0){
-            telemetry.addData("Path", 0);
+            //telemetry for vision
+            telemetry.addData("Vision", 0);
             telemetry.update();
 
-            robot.resetDriveTrainEncoders();
+            //move forward 6 feet at 0.3 speed
             robot.setTargetInches((int)(6 * 12));
-            robot.setTolerance(10);
-            robot.navigate(0.3, false, false, false, false, false);
+            robot.navigate(0.3);
 
-            robot.resetDriveTrainEncoders();
+            //strafe right 12 inches at 0.1 speed
             robot.setTargetInches(12, -12, -12, 12, true);
-            robot.setTolerance(10);
-            robot.navigate(0.1, false, false, true, false, false);
+            robot.navigate(0.1);
 
-            grabberLift.set((13/voltageSensor.getVoltage()) * -0.4);
-            sleep(1000);
-            grabberLift.set(0);
+            //drop the wobble goal
+            robot.dropWobbleGoal();
 
-            grabber.set((13/voltageSensor.getVoltage()) * -1);
-
-            grabberLift.set((13/voltageSensor.getVoltage()) * 0.4);
-            sleep(1000);
-            grabberLift.set(0);
-
-            robot.resetDriveTrainEncoders();
+            //strafe left 1 feet at 0.1 speed
             robot.setTargetInches(-12, 12, 12, -12, true);
-            robot.setTolerance(10);
-            robot.navigate(0.1, false, true, false, false, false);
+            robot.navigate(0.1);
         }
 
         if (visionDec == 1){
-            telemetry.addData("Path", 1);
+            //telemetry for vision
+            telemetry.addData("Vision", 1);
             telemetry.update();
 
-            robot.resetDriveTrainEncoders();
+            //move forward 8 feet at 0.3 speed
             robot.setTargetInches((int)(8 * 12));
-            robot.setTolerance(10);
-            robot.navigate(0.3, false, false, false, false, false);
+            robot.navigate(0.3);
 
-            robot.resetDriveTrainEncoders();
+            //strafe left 2 feet at 0.1 speed
             robot.setTargetInches(-24, 24, 24, -24, true);
-            robot.setTolerance(10);
-            robot.navigate(0.1, false, true, false, false, false);
+            robot.navigate(0.1);
 
-            grabberLift.set((13/voltageSensor.getVoltage()) * -0.4);
-            sleep(1000);
-            grabberLift.set(0);
+            //drop the wobble goal
+            robot.dropWobbleGoal();
 
-            grabber.set((13/voltageSensor.getVoltage()) * -1);
-
-            grabberLift.set((13/voltageSensor.getVoltage()) * 0.4);
-            sleep(1000);
-            grabberLift.set(0);
-
-            robot.resetDriveTrainEncoders();
+            //strafe right 2 feet at 0.1 speed
             robot.setTargetInches(24, -24, -24, 24, true);
-            robot.setTolerance(10);
-            robot.navigate(0.1, false, false, true, false, false);
+            robot.navigate(0.1);
 
-            robot.resetDriveTrainEncoders();
+            //move backward 2 feet at 0.3 speed
             robot.setTargetInches((int)(-2 * 12));
-            robot.setTolerance(10);
-            robot.navigate(0.3, true, false, false, false, false);
+            robot.navigate(0.3);
         }
 
+        //stop motors
         robot.stopMotors();
 
     }
