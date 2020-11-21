@@ -25,6 +25,7 @@ public class AutoControlled extends LinearOpMode {
         shooter = new Motor(hardwareMap, "shooter");
         intake = new Motor(hardwareMap, "intake");
         grabberLift = new Motor(hardwareMap, "grabberLift");
+        
         grabber = new CRServo(hardwareMap, "grabber");
         flicker = new CRServo(hardwareMap, "flicker");
 
@@ -115,7 +116,7 @@ public class AutoControlled extends LinearOpMode {
             robot.setTargetInches(24, -24, -24, 24);
             robot.navigate(0.1);
 
-            //move backward 2 feet at 0.25 speed
+            //move backward 2 feet
             robot.setTargetInches((int)(-2 * 12));
             robot.navigate(0.25);
         }
