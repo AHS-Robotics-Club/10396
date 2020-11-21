@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Dependencies;
 
+import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -7,13 +8,14 @@ import org.firstinspires.ftc.teamcode.Autonomous.AutoControlled;
 
 public class AutoCommands extends AutoControlled {
     private Motor fL, fR, bL, bR;
-    private Motor shooter, intake;
+    private Motor shooter, intake, lift;
+    private CRServo grabber;
     private int tolerance;
     private VoltageSensor voltageSensor;
 
     public double ticksPerInch = 145.6/((96/25.4)*Math.PI);
 
-    public AutoCommands(Motor fLM, Motor fRM, Motor bLM, Motor bRM, Motor shooterM, Motor intakeM, VoltageSensor volt){
+    public AutoCommands(Motor fLM, Motor fRM, Motor bLM, Motor bRM, Motor shooterM, Motor intakeM, Motor lifter, CRServo grab, VoltageSensor volt){
         fL = fLM;
         fR = fRM;
         bL = bLM;
@@ -22,6 +24,8 @@ public class AutoCommands extends AutoControlled {
         intake = intakeM;
         tolerance = 0;
         voltageSensor = volt;
+        lift = lifter;
+        grabber = grab;
     }
 
     public void initialize(){
