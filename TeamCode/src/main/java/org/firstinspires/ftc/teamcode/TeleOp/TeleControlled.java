@@ -98,7 +98,7 @@ public class TeleControlled extends LinearOpMode {
                     grabber.set(1);
                     unlocked = false;
                 } else {
-                    grabber.set(-1);
+                    grabber.set((13/voltageSensor.getVoltage()) * -1);
                     sleep(750);
                     grabber.set(0);
                     unlocked = true;
