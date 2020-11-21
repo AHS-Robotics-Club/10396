@@ -9,11 +9,11 @@ public class AutoCommands extends AutoControlled {
     private Motor fL, fR, bL, bR;
     private Motor shooter, intake;
     private int tolerance;
+    private VoltageSensor voltageSensor;
 
     public double ticksPerInch = 145.6/((96/25.4)*Math.PI);
-    public VoltageSensor voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-    public AutoCommands(Motor fLM, Motor fRM, Motor bLM, Motor bRM, Motor shooterM, Motor intakeM){
+    public AutoCommands(Motor fLM, Motor fRM, Motor bLM, Motor bRM, Motor shooterM, Motor intakeM, VoltageSensor volt){
         fL = fLM;
         fR = fRM;
         bL = bLM;
@@ -21,6 +21,7 @@ public class AutoCommands extends AutoControlled {
         shooter = shooterM;
         intake = intakeM;
         tolerance = 0;
+        voltageSensor = volt;
     }
 
     public void initialize(){
@@ -28,6 +29,11 @@ public class AutoCommands extends AutoControlled {
         bL.setInverted(true);
         fL.encoder.setDirection(Motor.Direction.FORWARD);
         bL.encoder.setDirection(Motor.Direction.FORWARD);
+
+        fL.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        fR.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bL.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bR.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void resetDriveTrainEncoders(){
@@ -60,31 +66,45 @@ public class AutoCommands extends AutoControlled {
     }
 
     public void setTargetInches(int inches){
-        fR.motor.setTargetPosition((int)(inches * ticksPerInch));
-        fL.motor.setTargetPosition((int)(inches * ticksPerInch));
-        bR.motor.setTargetPosition((int)(inches * ticksPerInch));
-        bL.motor.setTargetPosition((int)(inches * ticksPerInch));
+        fR.motor.setTargetPosition((int)(inches * ticksPerInch * 1.5));
+        fL.motor.setTargetPosition((int)(inches * ticksPerInch * 1.5));
+        bR.motor.setTargetPosition((int)(inches * ticksPerInch * 1.5));
+        bL.motor.setTargetPosition((int)(inches * ticksPerInch * 1.5));
+    }
+
+    public void setTargetInches(double inchesFL, double inchesFR, double inchesBL, double inchesBR, boolean strafe){
+        if (!strafe) {
+            fR.motor.setTargetPosition((int) (inchesFR * ticksPerInch * 1.5));
+            fL.motor.setTargetPosition((int) (inchesFL * ticksPerInch * 1.5));
+            bR.motor.setTargetPosition((int) (inchesBR * ticksPerInch * 1.5));
+            bL.motor.setTargetPosition((int) (inchesBL * ticksPerInch * 1.5));
+        } else {
+            fR.motor.setTargetPosition((int) (inchesFR * ticksPerInch * 1.5 * 1.2972973));
+            fL.motor.setTargetPosition((int) (inchesFL * ticksPerInch * 1.5 * 1.2972973));
+            bR.motor.setTargetPosition((int) (inchesBR * ticksPerInch * 1.5 * 1.2972973));
+            bL.motor.setTargetPosition((int) (inchesBL * ticksPerInch * 1.5 * 1.2972973));
+        }
     }
 
     public void setTargetFeet(int feet){
-        fR.motor.setTargetPosition((int)(feet * 12 * ticksPerInch));
-        fL.motor.setTargetPosition((int)(feet * 12 * ticksPerInch));
-        bR.motor.setTargetPosition((int)(feet * 12 * ticksPerInch));
-        bL.motor.setTargetPosition((int)(feet * 12 * ticksPerInch));
+        fR.motor.setTargetPosition((int)(feet * 12 * ticksPerInch * 1.5));
+        fL.motor.setTargetPosition((int)(feet * 12 * ticksPerInch * 1.5));
+        bR.motor.setTargetPosition((int)(feet * 12 * ticksPerInch * 1.5));
+        bL.motor.setTargetPosition((int)(feet * 12 * ticksPerInch * 1.5));
     }
 
     public void setTargetFeet(int feetFL, int feetFR, int feetBL, int feetBR){
-        fR.motor.setTargetPosition((int)(feetFR * 12 * ticksPerInch));
-        fL.motor.setTargetPosition((int)(feetFL * 12 * ticksPerInch));
-        bR.motor.setTargetPosition((int)(feetBR * 12 * ticksPerInch));
-        bL.motor.setTargetPosition((int)(feetBL * 12 * ticksPerInch));
+        fR.motor.setTargetPosition((int)(feetFR * 12 * ticksPerInch * 1.5));
+        fL.motor.setTargetPosition((int)(feetFL * 12 * ticksPerInch * 1.5));
+        bR.motor.setTargetPosition((int)(feetBR * 12 * ticksPerInch * 1.5));
+        bL.motor.setTargetPosition((int)(feetBL * 12 * ticksPerInch * 1.5));
     }
 
     public void setTolerance(int toleranceParam){
         tolerance = toleranceParam;
     }
 
-    public void navigate(double speed, boolean reverse, boolean strafeLeft, boolean strafeRight){
+    public void navigate(double speed, boolean reverse, boolean strafeLeft, boolean strafeRight, boolean rotateLeft, boolean rotateRight){
         fR.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         fL.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         bR.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -93,42 +113,50 @@ public class AutoCommands extends AutoControlled {
         double adjustedSpeed = (13/voltageSensor.getVoltage()) * speed;
 
         if (reverse) {
-            fL.set(-adjustedSpeed);
             fR.set(-adjustedSpeed);
             bL.set(-adjustedSpeed);
             bR.set(-adjustedSpeed);
+            sleep(70);
+            fL.set(-adjustedSpeed);
         } else if (strafeLeft) {
-            fL.set(-adjustedSpeed);
             fR.set(adjustedSpeed);
             bL.set(adjustedSpeed);
             bR.set(-adjustedSpeed);
+            sleep(70);
+            fL.set(-adjustedSpeed);
         } else if (strafeRight) {
-            fL.set(adjustedSpeed);
             fR.set(-adjustedSpeed);
             bL.set(-adjustedSpeed);
             bR.set(adjustedSpeed);
-        } else {
+            sleep(70);
             fL.set(adjustedSpeed);
+        } else if (rotateLeft) {
+            fR.set(adjustedSpeed);
+            bL.set(-adjustedSpeed);
+            bR.set(adjustedSpeed);
+            sleep(70);
+            fL.set(-adjustedSpeed);
+        } else if (rotateRight) {
+            fR.set(-adjustedSpeed);
+            bL.set(adjustedSpeed);
+            bR.set(-adjustedSpeed);
+            sleep(70);
+            fL.set(adjustedSpeed);
+        } else{
             fR.set(adjustedSpeed);
             bL.set(adjustedSpeed);
             bR.set(adjustedSpeed);
+            sleep(70);
+            fL.set(adjustedSpeed);
         }
 
-        while (opModeIsActive() && ((Math.abs(Math.abs(fL.motor.getTargetPosition()) - Math.abs(fL.motor.getCurrentPosition())) < tolerance) || (Math.abs(Math.abs(fR.motor.getTargetPosition()) - Math.abs(fR.motor.getCurrentPosition())) < tolerance) || (Math.abs(Math.abs(bL.motor.getTargetPosition()) - Math.abs(bL.motor.getCurrentPosition())) < tolerance) || (Math.abs(Math.abs(bR.motor.getTargetPosition()) - Math.abs(bR.motor.getCurrentPosition())) < tolerance))) {
-            if (Math.abs(fL.motor.getTargetPosition() - fL.motor.getCurrentPosition()) <= tolerance){
-                fL.set(0);
-            }
-            if (Math.abs(fR.motor.getTargetPosition() - fR.motor.getCurrentPosition()) <= tolerance){
-                fR.set(0);
-            }
-            if (Math.abs(bL.motor.getTargetPosition() - bL.motor.getCurrentPosition()) <= tolerance){
-                bL.set(0);
-            }
-            if (Math.abs(bR.motor.getTargetPosition() - bR.motor.getCurrentPosition()) <= tolerance){
-                bR.set(0);
-            }
+        while (fL.motor.isBusy()){//(Math.abs(Math.abs(fL.motor.getTargetPosition()) - Math.abs(fL.motor.getCurrentPosition())) > tolerance) || (Math.abs(Math.abs(fR.motor.getTargetPosition()) - Math.abs(fR.motor.getCurrentPosition())) > tolerance) || (Math.abs(Math.abs(bL.motor.getTargetPosition()) - Math.abs(bL.motor.getCurrentPosition())) > tolerance) || (Math.abs(Math.abs(bR.motor.getTargetPosition()) - Math.abs(bR.motor.getCurrentPosition())) > tolerance)) {
+            idle();
         }
-
+        fL.set(0);
+        fR.set(0);
+        bL.set(0);
+        bR.set(0);
         resetDriveTrainEncoders();
     }
 
