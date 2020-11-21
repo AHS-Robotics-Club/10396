@@ -49,7 +49,7 @@ public class TeleControlled extends LinearOpMode {
             );
 
             if (gamepad1.y){
-                shooter.set((13/voltageSensor.getVoltage()) * 1.0);
+                shooter.set((13/voltageSensor.getVoltage()) * 0.52);
             } else if (gamepad1.a){
                 shooter.set((13/voltageSensor.getVoltage()) * 0.4);
             } else if (gamepad1.b) {
