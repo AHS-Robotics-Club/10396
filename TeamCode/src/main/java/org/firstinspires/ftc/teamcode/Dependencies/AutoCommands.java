@@ -139,6 +139,10 @@ public class AutoCommands extends AutoControlled {
         bL.motor.setTargetPosition((int)(feetBL * 12 * ticksPerInch * 1.5));
     }
 
+    public void prepShooter(){
+        shooter.set(0.52);
+    }
+
     public void shoot(){
         shooter.set(0.52);
         sleep(3000);
@@ -152,6 +156,9 @@ public class AutoCommands extends AutoControlled {
         sleep(300);
         flicker.set(0);
         sleep(500);
+    }
+
+    public void stopShooter(){
         shooter.set(0);
     }
 
