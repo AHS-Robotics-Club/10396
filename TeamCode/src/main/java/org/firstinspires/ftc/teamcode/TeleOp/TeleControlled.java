@@ -84,8 +84,8 @@ public class TeleControlled extends LinearOpMode {
 
             if (gamepad1.left_bumper){
                 grabberLift.set((13/voltageSensor.getVoltage()) * -0.4);
-                sleep(1000);
-                grabberLift.set(0);
+                //sleep(1000);
+                //grabberLift.set(0);
             }
             if (gamepad1.right_bumper){
                 grabberLift.set((13/voltageSensor.getVoltage()) * 0.4);
@@ -99,7 +99,7 @@ public class TeleControlled extends LinearOpMode {
                     unlocked = false;
                 } else {
                     grabber.set((13/voltageSensor.getVoltage()) * -1);
-                    sleep(750);
+                    sleep(1000);
                     grabber.set(0);
                     unlocked = true;
                 }
