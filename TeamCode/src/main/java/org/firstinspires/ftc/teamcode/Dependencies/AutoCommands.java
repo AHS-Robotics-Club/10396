@@ -191,10 +191,15 @@ public class AutoCommands extends AutoControlled {
         while (fL.motor.isBusy() || fR.motor.isBusy() || bL.motor.isBusy() || bR.motor.isBusy() && opModeIsActive()){
             if (fL.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() < 0 && bL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0) {
                 //backward
-                fR.set(getBackwardSpeed(-speed, fR)[0]);
-                bL.set(getBackwardSpeed(-speed, bL)[1]);
-                bR.set(getBackwardSpeed(-speed, bR)[0]);
-                fL.set(getBackwardSpeed(-speed, fL)[1]);
+                fR.set(-speed);
+                bL.set(-speed);
+                bR.set(-speed);
+                fL.set(-speed);
+
+                //fR.set(getBackwardSpeed(-speed, fR)[0]);
+                //bL.set(getBackwardSpeed(-speed, bL)[1]);
+                //bR.set(getBackwardSpeed(-speed, bR)[0]);
+                //fL.set(getBackwardSpeed(-speed, fL)[1]);
             } else if (fL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 & bL.motor.getTargetPosition() > 0) {
                 //strafe left
                 fR.set(speed);
@@ -234,10 +239,10 @@ public class AutoCommands extends AutoControlled {
 
     public void setInitialSpeed(double speed){
         if (fL.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() < 0 && bL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0) {
-            fR.set(getBackwardSpeed(-speed, fR)[0]);
-            bL.set(getBackwardSpeed(-speed, bL)[1]);
-            bR.set(getBackwardSpeed(-speed, bR)[0]);
-            fL.set(getBackwardSpeed(-speed, fL)[1]);
+            fR.set(-speed);
+            bL.set(-speed);
+            bR.set(-speed);
+            fL.set(-speed);
         } else if (fL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 & bL.motor.getTargetPosition() > 0) {
             fR.set(speed);
             bL.set(speed);
