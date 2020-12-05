@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.hardware.RevIMU;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import org.firstinspires.ftc.teamcode.Dependencies.UGRectDetector;
@@ -15,7 +16,7 @@ public class AutoControlled extends LinearOpMode {
 
     private Motor frontLeft, frontRight, backLeft, backRight, shooter, intake, grabberLift;
     private CRServo flicker;
-    private CRServo grabber;
+    private SimpleServo grabber;
     public VoltageSensor voltageSensor;
     public UGRectDetector vision;
     private RevIMU imu;
@@ -30,7 +31,7 @@ public class AutoControlled extends LinearOpMode {
         shooter = new Motor(hardwareMap, "shooter");
         intake = new Motor(hardwareMap, "intake");
         grabberLift = new Motor(hardwareMap, "grabberLift");
-        grabber = new CRServo(hardwareMap, "grabber");
+        grabber = new SimpleServo(hardwareMap, "grabber");
         flicker = new CRServo(hardwareMap, "flicker");
 
         imu = new RevIMU(hardwareMap, "imu");
