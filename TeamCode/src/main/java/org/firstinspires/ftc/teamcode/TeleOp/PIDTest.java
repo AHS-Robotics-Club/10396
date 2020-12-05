@@ -3,15 +3,15 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.RevIMU;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.teamcode.Dependencies.TeleBot;
 
-@Disabled
+
 @TeleOp(name = "Tune Shooter")
 public class PIDTest extends LinearOpMode {
     Motor frontLeft, frontRight, backLeft, backRight;
@@ -20,8 +20,9 @@ public class PIDTest extends LinearOpMode {
     MecanumDrive m_drive;
     VoltageSensor voltageSensor;
     TeleBot robot;
-    CRServo flicker, grabber;
-    PIDController pid = new PIDController(0.114, 0.001, 0);
+    CRServo flicker;
+    SimpleServo grabber;
+    PIDController pid = new PIDController(0.1, 0, 0);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -32,9 +33,12 @@ public class PIDTest extends LinearOpMode {
         backRight = new Motor(hardwareMap, "bR");
         intake = new Motor(hardwareMap, "intake");
         shooter = new Motor(hardwareMap, "shooter");
+        shooter.setRunMode(Motor.RunMode.VelocityControl);
+        shooter.setFeedforwardCoefficients(0,0.5);
+        shooter.resetEncoder();
         flicker = new CRServo(hardwareMap, "flicker");
         grabberLift = new Motor(hardwareMap, "grabberLift");
-        grabber = new CRServo(hardwareMap, "grabber");
+        grabber = new SimpleServo(hardwareMap, "grabber");
 
         imu = new RevIMU(hardwareMap, "imu");
 
@@ -49,17 +53,29 @@ public class PIDTest extends LinearOpMode {
         double point = 0;
 
         while (opModeIsActive() && !isStopRequested()) {
-            pid.setSetPoint(point);
-            shooter.resetEncoder();
-            shooter.set(pid.calculate(shooter.getCurrentPosition()));
-
+            if(gamepad1.y){
+                shooter.set(0.4);
+            }else{
+                shooter.set(0);
+            }
             if (gamepad1.dpad_up){
-                point += 1;
+                point += 0.1;
                 sleep(500);
             }
             if (gamepad1.dpad_down){
-                point -= 1;
+                point -= 0.1;
                 sleep(500);
+            }
+            if (gamepad1.b){
+                flicker.set(0);
+                sleep(400);
+                flicker.set(-1);
+                sleep(400);
+                flicker.set(0);
+                sleep(400);
+                flicker.set(1);
+                sleep(400);
+                flicker.set(0);
             }
 
             telemetry.addData("Speed Selected", point);

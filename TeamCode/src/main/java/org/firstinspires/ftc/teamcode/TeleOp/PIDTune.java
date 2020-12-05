@@ -6,9 +6,9 @@ import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.RevIMU;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -22,8 +22,10 @@ public class PIDTune extends LinearOpMode {
     MecanumDrive m_drive;
     VoltageSensor voltageSensor;
     TeleBot robot;
-    CRServo flicker, grabber;
+    CRServo flicker;
+    SimpleServo grabber;
     PIDController pid = new PIDController(0, 0, 0);
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -36,7 +38,7 @@ public class PIDTune extends LinearOpMode {
         shooter = new Motor(hardwareMap, "shooter");
         flicker = new CRServo(hardwareMap, "flicker");
         grabberLift = new Motor(hardwareMap, "grabberLift");
-        grabber = new CRServo(hardwareMap, "grabber");
+        grabber = new SimpleServo(hardwareMap, "grabber");
 
         imu = new RevIMU(hardwareMap, "imu");
 
@@ -48,7 +50,7 @@ public class PIDTune extends LinearOpMode {
         double i = 0;
         double d = 0;
         double increment = 0.1;
-
+        
         while (opModeIsActive() && !isStopRequested()) {
             pid.setSetPoint(10);
             shooter.resetEncoder();
@@ -82,21 +84,23 @@ public class PIDTune extends LinearOpMode {
                 pid.setI(i);
                 sleep(500);
             }
-            if (gamepad1.left_bumper){
+            if (gamepad1.x){
                 d -= increment;
                 pid.setD(d);
                 sleep(500);
             }
-            if (gamepad1.right_bumper){
+            if (gamepad1.y){
                 d += increment;
                 pid.setD(d);
                 sleep(500);
             }
             if (gamepad1.a){
                 increment = 0.01;
+                sleep(500);
             }
             if (gamepad1.b){
                 increment = 0.1;
+                sleep(500);
             }
         }
     }
