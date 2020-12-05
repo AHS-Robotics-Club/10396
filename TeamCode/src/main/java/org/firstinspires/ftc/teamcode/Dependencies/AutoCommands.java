@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Dependencies;
 
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,23 +12,28 @@ public class AutoCommands extends AutoControlled {
     private Motor fL, fR, bL, bR;
     private Motor shooter, intake, lift;
     private CRServo grabber, flicker;
-    private int tolerance;
     private VoltageSensor voltageSensor;
+    private RevIMU imu;
+    private PIDController pid;
 
     public double ticksPerInch = 145.6/((96/25.4)*Math.PI);
+    public double kP = 0.114;
+    public double kI = 0.001;
+    public double kD = 0;
 
-    public AutoCommands(Motor fLM, Motor fRM, Motor bLM, Motor bRM, Motor shooterM, Motor intakeM, Motor lifter, CRServo grab, CRServo flick, VoltageSensor volt){
+    public AutoCommands(Motor fLM, Motor fRM, Motor bLM, Motor bRM, Motor shooterM, Motor intakeM, Motor lifter, CRServo grab, CRServo flick, VoltageSensor volt, RevIMU imuParam){
         fL = fLM;
         fR = fRM;
         bL = bLM;
         bR = bRM;
         shooter = shooterM;
         intake = intakeM;
-        tolerance = 0;
         voltageSensor = volt;
         lift = lifter;
         grabber = grab;
         flicker = flick;
+        imu = imuParam;
+        pid = new PIDController(kP, kI, kD);
     }
 
     public void initialize(){
@@ -47,6 +54,10 @@ public class AutoCommands extends AutoControlled {
         bR.set(0);
         lift.set(0);
         shooter.set(0);
+        grabber.set((13/voltageSensor.getVoltage()) * -0.2);
+
+        imu.init();
+        imu.reset();
     }
 
     public void resetDriveTrainEncoders(){
@@ -56,43 +67,19 @@ public class AutoCommands extends AutoControlled {
         bL.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public void resetEncoders(){
-        fR.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        fL.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        bR.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        bL.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        shooter.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
-
     public void dropWobbleGoal(){
-        lift.set((13/voltageSensor.getVoltage()) * -0.4);
-        sleep(1000);
-        lift.set(0);
-        grabber.set((13/voltageSensor.getVoltage()) * -1);
         lift.set((13/voltageSensor.getVoltage()) * 0.4);
+        sleep(500);
+        lift.set(0);
+        grabber.set(0);
+        sleep(300);
+        grabber.set(1);
+        sleep(400);
+        grabber.set(0);
+        sleep(300);
+        lift.set((13/voltageSensor.getVoltage()) * -0.5);
         sleep(1000);
         lift.set(0);
-    }
-
-    public void setTarget(int ticks){
-        fR.motor.setTargetPosition(ticks);
-        fL.motor.setTargetPosition(ticks);
-        bR.motor.setTargetPosition(ticks);
-        bL.motor.setTargetPosition(ticks);
-    }
-
-    public void setTarget(int ticksFL, int ticksFR, int ticksBL, int ticksBR){
-        fR.motor.setTargetPosition(ticksFR);
-        fL.motor.setTargetPosition(ticksFL);
-        bR.motor.setTargetPosition(ticksBR);
-        bL.motor.setTargetPosition(ticksBL);
-    }
-
-    public void setTargetInches(int inches){
-        fR.motor.setTargetPosition((int)(inches * ticksPerInch * 1.5));
-        fL.motor.setTargetPosition((int)(inches * ticksPerInch * 1.5));
-        bR.motor.setTargetPosition((int)(inches * ticksPerInch * 1.5));
-        bL.motor.setTargetPosition((int)(inches * ticksPerInch * 1.5));
     }
 
     public void setTargetInches(double inchesFL, double inchesFR, double inchesBL, double inchesBR){
@@ -102,11 +89,15 @@ public class AutoCommands extends AutoControlled {
             bR.motor.setTargetPosition((int) (inchesBR * ticksPerInch * 1.5 * 1.2972973));
             bL.motor.setTargetPosition((int) (inchesBL * ticksPerInch * 1.5 * 1.2972973));
         } else {
-            fR.motor.setTargetPosition((int) (inchesFR * ticksPerInch * 1.5));
-            fL.motor.setTargetPosition((int) (inchesFL * ticksPerInch * 1.5));
-            bR.motor.setTargetPosition((int) (inchesBR * ticksPerInch * 1.5));
-            bL.motor.setTargetPosition((int) (inchesBL * ticksPerInch * 1.5));
+            fR.motor.setTargetPosition((int) (inchesFR * ticksPerInch * 1.5 * 1.25));
+            fL.motor.setTargetPosition((int) (inchesFL * ticksPerInch * 1.5 * 1.25));
+            bR.motor.setTargetPosition((int) (inchesBR * ticksPerInch * 1.5 * 1.25));
+            bL.motor.setTargetPosition((int) (inchesBL * ticksPerInch * 1.5 * 1.25));
         }
+    }
+
+    public void setTargetFeet(double feetFL, double feetFR, double feetBL, double feetBR){
+        setTargetInches(feetFL * 12, feetFR * 12, feetBL * 12, feetBR * 12);
     }
 
     public void setTargetRotation(int degrees){
@@ -122,114 +113,144 @@ public class AutoCommands extends AutoControlled {
             bL.motor.setTargetPosition((int)((degrees/10)*Math.PI * ticksPerInch * 1.5));
             bR.motor.setTargetPosition((int)(-(degrees/10)*Math.PI * ticksPerInch * 1.5));
         }
-
-    }
-
-    public void setTargetFeet(int feet){
-        fR.motor.setTargetPosition((int)(feet * 12 * ticksPerInch * 1.5));
-        fL.motor.setTargetPosition((int)(feet * 12 * ticksPerInch * 1.5));
-        bR.motor.setTargetPosition((int)(feet * 12 * ticksPerInch * 1.5));
-        bL.motor.setTargetPosition((int)(feet * 12 * ticksPerInch * 1.5));
-    }
-
-    public void setTargetFeet(int feetFL, int feetFR, int feetBL, int feetBR){
-        fR.motor.setTargetPosition((int)(feetFR * 12 * ticksPerInch * 1.5));
-        fL.motor.setTargetPosition((int)(feetFL * 12 * ticksPerInch * 1.5));
-        bR.motor.setTargetPosition((int)(feetBR * 12 * ticksPerInch * 1.5));
-        bL.motor.setTargetPosition((int)(feetBL * 12 * ticksPerInch * 1.5));
     }
 
     public void prepShooter(){
-        shooter.set(0.52);
+        shooter.set((13/voltageSensor.getVoltage()) * 0.52);
     }
 
-    public void shoot(){
-        shooter.set(0.52);
-        sleep(3000);
-        flicker.set(0);
-        sleep(300);
-        flicker.set(-1);
-        sleep(300);
-        flicker.set(0);
-        sleep(300);
-        flicker.set(1);
-        sleep(300);
-        flicker.set(0);
-        sleep(500);
-    }
+    public void shoot(int speed){
+        long startTime = System.currentTimeMillis();
+        while((System.currentTimeMillis() - startTime) < 5000 && opModeIsActive()) {
+            pid.setSetPoint(speed);
+            shooter.resetEncoder();
+            shooter.set(pid.calculate(shooter.getCurrentPosition()));
+        }
 
-    public void stopShooter(){
+        for (int i = 0; i < 3; i++){
+            flicker.set(0);
+            sleep(300);
+            flicker.set(-1);
+            sleep(300);
+            flicker.set(0);
+            sleep(300);
+            flicker.set(1);
+            sleep(300);
+            flicker.set(0);
+            sleep(1000);
+        }
+
         shooter.set(0);
     }
 
-    public void setTolerance(int toleranceParam){
-        tolerance = toleranceParam;
+    public void stopMotors(){
+        fL.set(0);
+        fR.set(0);
+        bL.set(0);
+        bR.set(0);
+    }
+
+    public double[] getForwardSpeed(double speed, Motor m){
+        double[] powers = new double[2];
+        powers[0] = Math.max(0.15, (speed + (0-(imu.getHeading()/60))) * (1-(Math.abs(m.getCurrentPosition() - ((double)m.motor.getTargetPosition()/2)))/((double)m.motor.getTargetPosition()/2)));
+        powers[1] = Math.max(0.15, (speed - (0-(imu.getHeading()/60))) * (1-(Math.abs(m.getCurrentPosition() - ((double)m.motor.getTargetPosition()/2)))/((double)m.motor.getTargetPosition()/2)));
+        return powers;
     }
 
     public void navigate(double speed){
         resetDriveTrainEncoders();
+        imu.reset();
 
         fR.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         fL.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         bR.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         bL.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        double adjustedSpeed = (13/voltageSensor.getVoltage()) * speed;
+        setInitialSpeed(speed);
 
-        if (fL.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() < 0 && bL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0) {
-            fR.set(-adjustedSpeed);
-            bL.set(-adjustedSpeed);
-            bR.set(-adjustedSpeed);
-            sleep(70);
-            fL.set(-adjustedSpeed);
-        } else if (fL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 & bL.motor.getTargetPosition() > 0) {
-            fR.set(adjustedSpeed);
-            bL.set(adjustedSpeed);
-            bR.set(-adjustedSpeed);
-            sleep(70);
-            fL.set(-adjustedSpeed);
-        } else if (fL.motor.getTargetPosition() > 0 && bR.motor.getTargetPosition() > 0 && fR.motor.getTargetPosition() < 0 & bL.motor.getTargetPosition() < 0) {
-            fR.set(-adjustedSpeed);
-            bL.set(-adjustedSpeed);
-            bR.set(adjustedSpeed);
-            sleep(70);
-            fL.set(adjustedSpeed);
-        } else if (fL.motor.getTargetPosition() < 0 && bL.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 && bR.motor.getTargetPosition() > 0) {
-            fR.set(adjustedSpeed);
-            bL.set(-adjustedSpeed);
-            bR.set(adjustedSpeed);
-            sleep(70);
-            fL.set(-adjustedSpeed);
-        } else if (fL.motor.getTargetPosition() > 0 && bL.motor.getTargetPosition() > 0 && bR.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() < 0) {
-            fR.set(-adjustedSpeed);
-            bL.set(adjustedSpeed);
-            bR.set(-adjustedSpeed);
-            sleep(70);
-            fL.set(adjustedSpeed);
-        } else{
-            fR.set(adjustedSpeed);
-            bL.set(adjustedSpeed);
-            bR.set(adjustedSpeed);
-            sleep(70);
-            fL.set(adjustedSpeed);
+        while (fL.motor.isBusy() || fR.motor.isBusy() || bL.motor.isBusy() || bR.motor.isBusy() && opModeIsActive()){
+            if (fL.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() < 0 && bL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0) {
+                //backward
+                fR.set(-speed);
+                bL.set(-speed);
+                bR.set(-speed);
+                fL.set(-speed);
+            } else if (fL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 & bL.motor.getTargetPosition() > 0) {
+                //strafe left
+                fR.set(speed);
+                bL.set(speed);
+                bR.set(-speed);
+                fL.set(-speed);
+            } else if (fL.motor.getTargetPosition() > 0 && bR.motor.getTargetPosition() > 0 && fR.motor.getTargetPosition() < 0 & bL.motor.getTargetPosition() < 0) {
+                //strafe right
+                fR.set(-speed);
+                bL.set(-speed);
+                bR.set(speed);
+                fL.set(speed);
+            } else if (fL.motor.getTargetPosition() < 0 && bL.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 && bR.motor.getTargetPosition() > 0) {
+                //rotate left
+                fR.set(speed);
+                bL.set(-speed);
+                bR.set(speed);
+                fL.set(-speed);
+            } else if (fL.motor.getTargetPosition() > 0 && bL.motor.getTargetPosition() > 0 && bR.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() < 0) {
+                //rotate right
+                fR.set(-speed);
+                bL.set(speed);
+                bR.set(-speed);
+                fL.set(speed);
+            } else {
+                //forward
+                fR.set(getForwardSpeed(speed, fR)[0]);
+                bL.set(getForwardSpeed(speed, bL)[1]);
+                bR.set(getForwardSpeed(speed, bR)[0]);
+                fL.set(getForwardSpeed(speed, fL)[1]);
+            }
         }
 
-        while (fL.motor.isBusy()){
-            idle();
-        }
-
-        fL.set(0);
-        fR.set(0);
-        bL.set(0);
-        bR.set(0);
-
+        stopMotors();
         resetDriveTrainEncoders();
     }
 
-    public void stopMotors() {
+    public void setInitialSpeed(double speed){
+        if (fL.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() < 0 && bL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0) {
+            fR.set(-speed);
+            bL.set(-speed);
+            bR.set(-speed);
+            fL.set(-speed);
+        } else if (fL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 & bL.motor.getTargetPosition() > 0) {
+            fR.set(speed);
+            bL.set(speed);
+            bR.set(-speed);
+            fL.set(-speed);
+        } else if (fL.motor.getTargetPosition() > 0 && bR.motor.getTargetPosition() > 0 && fR.motor.getTargetPosition() < 0 & bL.motor.getTargetPosition() < 0) {
+            fR.set(-speed);
+            bL.set(-speed);
+            bR.set(speed);
+            fL.set(speed);
+        } else if (fL.motor.getTargetPosition() < 0 && bL.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 && bR.motor.getTargetPosition() > 0) {
+            fR.set(speed);
+            bL.set(-speed);
+            bR.set(speed);
+            fL.set(-speed);
+        } else if (fL.motor.getTargetPosition() > 0 && bL.motor.getTargetPosition() > 0 && bR.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() < 0) {
+            fR.set(-speed);
+            bL.set(speed);
+            bR.set(-speed);
+            fL.set(speed);
+        } else {
+            fR.set(getForwardSpeed(speed, fR)[0]);
+            bL.set(getForwardSpeed(speed, bL)[1]);
+            bR.set(getForwardSpeed(speed, bR)[0]);
+            fL.set(getForwardSpeed(speed, fL)[1]);
+        }
+    }
+
+    public void finish() {
         fL.stopMotor();
         fR.stopMotor();
         bL.stopMotor();
         bR.stopMotor();
+        shooter.stopMotor();
     }
 }
