@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
+import com.arcrobotics.ftclib.gamepad.ButtonReader;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
@@ -21,6 +24,7 @@ public class PIDTune extends LinearOpMode {
     TeleBot robot;
     CRServo flicker, grabber;
     PIDController pid = new PIDController(0, 0, 0);
+    GamepadEx gamepad = new GamepadEx(gamepad1);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -36,7 +40,7 @@ public class PIDTune extends LinearOpMode {
         grabber = new CRServo(hardwareMap, "grabber");
 
         imu = new RevIMU(hardwareMap, "imu");
-        
+
         robot = new TeleBot(frontLeft, frontRight, backLeft, backRight, intake, shooter, grabberLift, grabber, imu, flicker);
         robot.initialize();
 
@@ -45,7 +49,32 @@ public class PIDTune extends LinearOpMode {
         double i = 0;
         double d = 0;
         double increment = 0.1;
-        
+
+        ButtonReader dpadup = new ButtonReader(
+                gamepad, GamepadKeys.Button.DPAD_UP
+        );
+        ButtonReader dpaddown = new ButtonReader(
+                gamepad, GamepadKeys.Button.DPAD_DOWN
+        );
+        ButtonReader dpadleft = new ButtonReader(
+                gamepad, GamepadKeys.Button.DPAD_LEFT
+        );
+        ButtonReader dpadright = new ButtonReader(
+                gamepad, GamepadKeys.Button.DPAD_RIGHT
+        );
+        ButtonReader leftbumper = new ButtonReader(
+                gamepad, GamepadKeys.Button.LEFT_BUMPER
+        );
+        ButtonReader rightbumper = new ButtonReader(
+                gamepad, GamepadKeys.Button.RIGHT_BUMPER
+        );
+        ButtonReader a = new ButtonReader(
+                gamepad, GamepadKeys.Button.A
+        );
+        ButtonReader b = new ButtonReader(
+                gamepad, GamepadKeys.Button.B
+        );
+
         while (opModeIsActive() && !isStopRequested()) {
             pid.setSetPoint(10);
             shooter.resetEncoder();
@@ -58,41 +87,31 @@ public class PIDTune extends LinearOpMode {
             telemetry.addData("D Constant", d);
 
             telemetry.update();
-            
-            if (gamepad1.dpad_up){
+
+            if (dpadup.wasJustPressed()){
                 p += increment;
-                sleep(500);
             }
-            if (gamepad1.dpad_down){
+            if (dpaddown.wasJustPressed()){
                 p -= increment;
-                sleep(500);
             }
-            if (gamepad1.dpad_left){
+            if (dpadleft.wasJustPressed()){
                 i -= increment;
-                sleep(500);
             }
-            if (gamepad1.dpad_right){
+            if (dpadright.wasJustPressed()){
                 i += increment;
-                sleep(500);
             }
-            if (gamepad1.left_bumper){
+            if (leftbumper.wasJustPressed()){
                 d -= increment;
-                sleep(500);
             }
-            if (gamepad1.right_bumper){
+            if (rightbumper.wasJustPressed()){
                 d += increment;
-                sleep(500);
             }
-            if (gamepad1.a){
+            if (a.wasJustPressed()){
                 increment = 0.01;
-                sleep(500);
             }
-            if (gamepad1.b){
+            if (b.wasJustPressed()){
                 increment = 0.1;
-                sleep(500);
             }
         }
     }
-
-
 }
