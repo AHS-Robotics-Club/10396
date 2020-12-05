@@ -25,6 +25,31 @@ public class PIDTune extends LinearOpMode {
     CRServo flicker, grabber;
     PIDController pid = new PIDController(0, 0, 0);
     GamepadEx gamepadMain = new GamepadEx(gamepad1);
+    ButtonReader dpadup = new ButtonReader(
+            gamepadMain, GamepadKeys.Button.DPAD_UP
+    );
+    ButtonReader dpaddown = new ButtonReader(
+            gamepadMain, GamepadKeys.Button.DPAD_DOWN
+    );
+    ButtonReader dpadleft = new ButtonReader(
+            gamepadMain, GamepadKeys.Button.DPAD_LEFT
+    );
+    ButtonReader dpadright = new ButtonReader(
+            gamepadMain, GamepadKeys.Button.DPAD_RIGHT
+    );
+    ButtonReader leftbumper = new ButtonReader(
+            gamepadMain, GamepadKeys.Button.LEFT_BUMPER
+    );
+    ButtonReader rightbumper = new ButtonReader(
+            gamepadMain, GamepadKeys.Button.RIGHT_BUMPER
+    );
+    ButtonReader a = new ButtonReader(
+            gamepadMain, GamepadKeys.Button.A
+    );
+    ButtonReader b = new ButtonReader(
+            gamepadMain, GamepadKeys.Button.B
+    );
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -49,32 +74,7 @@ public class PIDTune extends LinearOpMode {
         double i = 0;
         double d = 0;
         double increment = 0.1;
-
-        ButtonReader dpadup = new ButtonReader(
-                gamepadMain, GamepadKeys.Button.DPAD_UP
-        );
-        ButtonReader dpaddown = new ButtonReader(
-                gamepadMain, GamepadKeys.Button.DPAD_DOWN
-        );
-        ButtonReader dpadleft = new ButtonReader(
-                gamepadMain, GamepadKeys.Button.DPAD_LEFT
-        );
-        ButtonReader dpadright = new ButtonReader(
-                gamepadMain, GamepadKeys.Button.DPAD_RIGHT
-        );
-        ButtonReader leftbumper = new ButtonReader(
-                gamepadMain, GamepadKeys.Button.LEFT_BUMPER
-        );
-        ButtonReader rightbumper = new ButtonReader(
-                gamepadMain, GamepadKeys.Button.RIGHT_BUMPER
-        );
-        ButtonReader a = new ButtonReader(
-                gamepadMain, GamepadKeys.Button.A
-        );
-        ButtonReader b = new ButtonReader(
-                gamepadMain, GamepadKeys.Button.B
-        );
-
+        
         while (opModeIsActive() && !isStopRequested()) {
             pid.setSetPoint(10);
             shooter.resetEncoder();
