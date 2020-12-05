@@ -74,7 +74,7 @@ public class TeleControlled extends LinearOpMode {
                 speed_multiplier = 0.5;
             }
 
-            if (gamepad1.dpad_left){
+            if (gamepad1.b){
                 flicker.set(0);
                 sleep(300);
                 flicker.set(-1);
@@ -86,18 +86,21 @@ public class TeleControlled extends LinearOpMode {
                 flicker.set(0);
             }
 
-            if (gamepad1.left_bumper){
+            if (gamepad1.dpad_right){
                 grabberLift.set((13/voltageSensor.getVoltage()) * 0.4);
-            } else {
+                sleep(500);
                 grabberLift.set(0);
-            }
-            if (gamepad1.right_bumper){
+                sleep(500);
+            } else if (gamepad1.dpad_left){
                 grabberLift.set((13/voltageSensor.getVoltage()) * -0.5);
+                sleep(1000);
+                grabberLift.set(0);
+                sleep(500);
             } else {
                 grabberLift.set(0);
             }
 
-            if (gamepad1.dpad_right) {
+            if (gamepad1.a) {
                 if (unlocked) {
                     grabber.setPosition(0.9);
                     unlocked = false;
