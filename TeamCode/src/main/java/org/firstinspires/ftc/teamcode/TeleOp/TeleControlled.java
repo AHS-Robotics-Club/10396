@@ -7,7 +7,6 @@ import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.teamcode.Dependencies.TeleBot;
 
@@ -20,7 +19,7 @@ public class TeleControlled extends LinearOpMode {
     VoltageSensor voltageSensor;
     TeleBot robot;
     CRServo flicker;
-    Servo grabber;
+    CRServo grabber;
     PIDController pid;
 
     double speed_multiplier = 1.0;
@@ -37,7 +36,7 @@ public class TeleControlled extends LinearOpMode {
         shooter = new Motor(hardwareMap, "shooter");
         flicker = new CRServo(hardwareMap, "flicker");
         grabberLift = new Motor(hardwareMap, "grabberLift");
-        grabber = hardwareMap.servo.get("grabber");
+        grabber = new CRServo(hardwareMap, "grabber");
 
         imu = new RevIMU(hardwareMap, "imu");
 
@@ -61,8 +60,7 @@ public class TeleControlled extends LinearOpMode {
             );
 
             if (gamepad1.y){
-                //tuned shooter value
-                pid.setSetPoint(10);
+                pid.setSetPoint(8.5);
                 shooter.resetEncoder();
                 shooter.set(pid.calculate(shooter.getCurrentPosition()));
             } else {
@@ -103,10 +101,14 @@ public class TeleControlled extends LinearOpMode {
 
             if (gamepad1.a) {
                 if (unlocked) {
-                    grabber.setPosition(0.9);
+                    grabber.set(-0.2);
+                    sleep(500);
                     unlocked = false;
                 } else {
-                    grabber.setPosition(0.3);
+                    grabber.set(1);
+                    sleep(2000);
+                    grabber.set(0);
+                    sleep(500);
                     unlocked = true;
                 }
             }
