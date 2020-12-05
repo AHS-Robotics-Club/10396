@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import org.firstinspires.ftc.teamcode.Dependencies.UGRectDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.teamcode.Dependencies.AutoCommands;
 
@@ -14,7 +15,8 @@ import org.firstinspires.ftc.teamcode.Dependencies.AutoCommands;
 public class AutoControlled extends LinearOpMode {
 
     private Motor frontLeft, frontRight, backLeft, backRight, shooter, intake, grabberLift;
-    private CRServo grabber, flicker;
+    private CRServo flicker;
+    private Servo grabber;
     public VoltageSensor voltageSensor;
     public UGRectDetector vision;
     private RevIMU imu;
@@ -29,8 +31,7 @@ public class AutoControlled extends LinearOpMode {
         shooter = new Motor(hardwareMap, "shooter");
         intake = new Motor(hardwareMap, "intake");
         grabberLift = new Motor(hardwareMap, "grabberLift");
-
-        grabber = new CRServo(hardwareMap, "grabber");
+        grabber = hardwareMap.servo.get("grabber");
         flicker = new CRServo(hardwareMap, "flicker");
 
         imu = new RevIMU(hardwareMap, "imu");
