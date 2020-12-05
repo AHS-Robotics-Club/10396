@@ -4,15 +4,14 @@ import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 public class TeleBot {
     private Motor fL, fR, bL, bR, shooter, intake, lifter;
     private RevIMU imu;
     private CRServo flick;
-    private Servo grabber;
+    private CRServo grabber;
 
-    public TeleBot(Motor frontLeft, Motor frontRight, Motor backLeft, Motor backRight, Motor intakeParam, Motor shooterParam, Motor lift, Servo grab, RevIMU imuParam, CRServo flicker) {
+    public TeleBot(Motor frontLeft, Motor frontRight, Motor backLeft, Motor backRight, Motor intakeParam, Motor shooterParam, Motor lift, CRServo grab, RevIMU imuParam, CRServo flicker) {
         fL = frontLeft;
         fR = frontRight;
         bL = backLeft;
@@ -42,7 +41,7 @@ public class TeleBot {
         intake.set(0);
         lifter.set(0);
 
-        grabber.setPosition(0.9);
+        grabber.set(-0.2);
         flick.set(0);
 
         fL.resetEncoder();
