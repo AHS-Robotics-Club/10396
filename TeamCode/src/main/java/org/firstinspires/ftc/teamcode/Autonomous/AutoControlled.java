@@ -131,12 +131,68 @@ public class AutoControlled extends LinearOpMode {
         robot.navigate(0.2);
 
         //shoot rings into top goal
-        robot.shoot(10);
+        robot.shoot(8.5);
 
-        //park on the line
+        /*//strafe left 27 inches
+        robot.setTargetInches(-27, 27, 27, -27);
+        robot.navigate(0.1);
+
+        //move backward 5 feet
+        robot.setTargetFeet(-5, -5, -5, -5);
+        robot.navigate(0.6);
+
+        //pick up second wobble goal
+        robot.pickUpWobbleGoal();
+
+        //strafe right 39 inches
+        robot.setTargetInches(39, -39, -39, 39);
+        robot.navigate(0.1);
+
+        //place second wobble goal based on vision
+        if (visionDec == 4){
+            //move forward 10 feet
+            robot.setTargetFeet(10, 10, 10, 10);
+            robot.navigate(0.6);
+
+            //drop the wobble goal
+            robot.dropWobbleGoal();
+
+            //move backward 4 feet
+            robot.setTargetFeet(-4, -4, -4, -4);
+            robot.navigate(0.6);
+        }
+
+        if (visionDec == 0){
+            //move forward 6 feet
+            robot.setTargetFeet(6, 6, 6, 6);
+            robot.navigate(0.6);
+
+            //drop the wobble goal
+            robot.dropWobbleGoal();
+        }
+
+        if (visionDec == 1){
+            //move forward 8 feet
+            robot.setTargetFeet(8, 8, 8, 8);
+            robot.navigate(0.6);
+
+            //strafe left 2 feet
+            robot.setTargetFeet(-2, 2, 2, -2);
+            robot.navigate(0.1);
+
+            //drop the wobble goal
+            robot.dropWobbleGoal();
+
+            //move backward 2 feet
+            robot.setTargetFeet(-2, -2, -2, -2);
+            robot.navigate(0.6);
+        }*/
+
+        //park on the line - REMOVE THIS PART IF WE DECIDE TO DO SECOND WOBBLE GOAL
         robot.setTargetFeet(1, 1, 1, 1);
         robot.navigate(0.6);
 
+        //stop motors
         robot.stopMotors();
         robot.finish();
     }
