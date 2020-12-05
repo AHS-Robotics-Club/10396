@@ -24,32 +24,6 @@ public class PIDTune extends LinearOpMode {
     TeleBot robot;
     CRServo flicker, grabber;
     PIDController pid = new PIDController(0, 0, 0);
-    GamepadEx gamepadMain = new GamepadEx(gamepad1);
-    ButtonReader dpadup = new ButtonReader(
-            gamepadMain, GamepadKeys.Button.DPAD_UP
-    );
-    ButtonReader dpaddown = new ButtonReader(
-            gamepadMain, GamepadKeys.Button.DPAD_DOWN
-    );
-    ButtonReader dpadleft = new ButtonReader(
-            gamepadMain, GamepadKeys.Button.DPAD_LEFT
-    );
-    ButtonReader dpadright = new ButtonReader(
-            gamepadMain, GamepadKeys.Button.DPAD_RIGHT
-    );
-    ButtonReader leftbumper = new ButtonReader(
-            gamepadMain, GamepadKeys.Button.LEFT_BUMPER
-    );
-    ButtonReader rightbumper = new ButtonReader(
-            gamepadMain, GamepadKeys.Button.RIGHT_BUMPER
-    );
-    ButtonReader a = new ButtonReader(
-            gamepadMain, GamepadKeys.Button.A
-    );
-    ButtonReader b = new ButtonReader(
-            gamepadMain, GamepadKeys.Button.B
-    );
-
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -74,7 +48,7 @@ public class PIDTune extends LinearOpMode {
         double i = 0;
         double d = 0;
         double increment = 0.1;
-        
+
         while (opModeIsActive() && !isStopRequested()) {
             pid.setSetPoint(10);
             shooter.resetEncoder();
@@ -88,28 +62,34 @@ public class PIDTune extends LinearOpMode {
 
             telemetry.update();
 
-            if (dpadup.wasJustPressed()){
+            if (gamepad1.dpad_up){
                 p += increment;
+                sleep(500);
             }
-            if (dpaddown.wasJustPressed()){
+            if (gamepad1.dpad_down){
                 p -= increment;
+                sleep(500);
             }
-            if (dpadleft.wasJustPressed()){
+            if (gamepad1.dpad_left){
                 i -= increment;
+                sleep(500);
             }
-            if (dpadright.wasJustPressed()){
+            if (gamepad1.dpad_right){
                 i += increment;
+                sleep(500);
             }
-            if (leftbumper.wasJustPressed()){
+            if (gamepad1.left_bumper){
                 d -= increment;
+                sleep(500);
             }
-            if (rightbumper.wasJustPressed()){
+            if (gamepad1.right_bumper){
                 d += increment;
+                sleep(500);
             }
-            if (a.wasJustPressed()){
+            if (gamepad1.a){
                 increment = 0.01;
             }
-            if (b.wasJustPressed()){
+            if (gamepad1.b){
                 increment = 0.1;
             }
         }
