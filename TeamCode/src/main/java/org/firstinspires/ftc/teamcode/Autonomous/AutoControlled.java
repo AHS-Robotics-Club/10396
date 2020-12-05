@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import org.firstinspires.ftc.teamcode.Dependencies.UGRectDetector;
@@ -15,6 +17,8 @@ public class AutoControlled extends LinearOpMode {
     private CRServo grabber, flicker;
     public VoltageSensor voltageSensor;
     public UGRectDetector vision;
+    private RevIMU imu;
+    private PIDController pid = new PIDController(0.114, 0.001, 0);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -29,6 +33,7 @@ public class AutoControlled extends LinearOpMode {
         grabber = new CRServo(hardwareMap, "grabber");
         flicker = new CRServo(hardwareMap, "flicker");
 
+        imu = new RevIMU(hardwareMap, "imu");
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
         vision = new UGRectDetector(hardwareMap, "camera");
@@ -37,14 +42,15 @@ public class AutoControlled extends LinearOpMode {
         vision.setBottomRectangle(0.5782918149466192, 0.29979879275653926);
         vision.setRectangleSize(200, 35);
 
-        AutoCommands robot = new AutoCommands(frontLeft, frontRight, backLeft, backRight, shooter, intake, grabberLift, grabber, flicker, voltageSensor);
+        AutoCommands robot = new AutoCommands(frontLeft, frontRight, backLeft, backRight, shooter, intake, grabberLift,
+                grabber, flicker, voltageSensor, imu);
         robot.initialize();
 
         waitForStart();
 
         long startTime = System.currentTimeMillis();
         int visionDec = 0;
-        while((System.currentTimeMillis()-startTime)<4500) {
+        while((System.currentTimeMillis() - startTime) < 3500) {
             telemetry.addData("Vision", vision.getStack());
             telemetry.update();
             visionDec = vision.getStack();
@@ -52,118 +58,86 @@ public class AutoControlled extends LinearOpMode {
 
         if (visionDec == 4){
             //telemetry for vision
-            telemetry.addData("Vision", 4);
+            telemetry.addData("Vision", "4 Rings Detected");
             telemetry.update();
 
             //move forward 10 feet
-            robot.setTargetInches((int)(10 * 12));
-            robot.navigate(0.2);
-
-            //strafe right 1 feet
-            robot.setTargetInches(12, -12, -12, 12);
-            robot.navigate(0.1);
+            robot.setTargetFeet(10, 10, 10, 10);
+            robot.navigate(0.6);
 
             //drop the wobble goal
             robot.dropWobbleGoal();
 
-            //strafe left 1 feet
-            robot.setTargetInches(-12, 12, 12, -12);
-            robot.navigate(0.1);
-
-            //move backward 4 feet
-            robot.setTargetInches((int)(-5 * 12));
-            robot.navigate(0.2);
+            //move backward 5 feet
+            robot.setTargetFeet(-5, -5, -5, -5);
+            robot.navigate(0.6);
         }
 
         if (visionDec == 0){
             //telemetry for vision
-            telemetry.addData("Vision", 0);
+            telemetry.addData("Vision", "0 Rings Detected");
             telemetry.update();
 
             //move forward 6 feet
-            robot.setTargetInches((int)(6 * 12));
-            robot.navigate(0.2);
-
-            //strafe right 1 feet
-            robot.setTargetInches(12, -12, -12, 12);
-            robot.navigate(0.1);
+            robot.setTargetFeet(6, 6, 6, 6);
+            robot.navigate(0.6);
 
             //drop the wobble goal
             robot.dropWobbleGoal();
 
-            //strafe left 1 feet
-            robot.setTargetInches(-12, 12, 12, -12);
-            robot.navigate(0.1);
-
             //move backward 1 feet
-            robot.setTargetInches(-12, -12, -12, -12);
-            robot.navigate(0.2);
+            robot.setTargetFeet(-1, -1, -1, -1);
+            robot.navigate(0.6);
         }
 
         if (visionDec == 1){
             //telemetry for vision
-            telemetry.addData("Vision", 1);
+            telemetry.addData("Vision", "1 Ring Detected");
             telemetry.update();
 
             //move forward 8 feet
-            robot.setTargetInches((int)(8 * 12));
-            robot.navigate(0.2);
+            robot.setTargetFeet(8, 8, 8, 8);
+            robot.navigate(0.6);
 
             //strafe left 2 feet
-            robot.setTargetInches(-24, 24, 24, -24);
+            robot.setTargetFeet(-2, 2, 2, -2);
             robot.navigate(0.1);
 
             //drop the wobble goal
             robot.dropWobbleGoal();
 
+            //move backward 2 feet
+            robot.setTargetFeet(-2, -2, -2, -2);
+            robot.navigate(0.6);
+
             //strafe right 2 feet
-            robot.setTargetInches(24, -24, -24, 24);
+            robot.setTargetFeet(2, -2, -2, 2);
             robot.navigate(0.1);
 
-            //move backward 2 feet
-            robot.setTargetInches((int)(-3 * 12));
-            robot.navigate(0.2);
+            //move backward 1 feet
+            robot.setTargetFeet(-1, -1, -1, -1);
+            robot.navigate(0.6);
         }
 
-        robot.setTargetRotation(180);
-        robot.navigate(0.2);
-
-        //strafe left 24 inches
-        robot.setTargetInches(-24, 24, 24, -24);
+        //strafe left 1 feet
+        robot.setTargetFeet(-1, 1, 1,-1);
         robot.navigate(0.1);
 
         //get shooter up to speed
         robot.prepShooter();
 
-        //navigate to first shot
-        robot.setTargetInches(-8, 8, 8, -8);
-        robot.navigate(0.1);
-
-        //shoot ring
-        robot.shoot();
-
-        //strafe left 8 inches
-        robot.setTargetInches(-8, 8, 8, -8);
-        robot.navigate(0.1);
-
-        //shoot ring
-        robot.shoot();
-
-        //strafe left 8 inches
-        robot.setTargetInches(-8, 8, 8, -8);
-        robot.navigate(0.1);
-
-        //shoot ring
-        robot.shoot();
-
-        //stop shooter
-        robot.stopShooter();
-
-        //park on the line
-        robot.setTargetInches(12, 12, 12, 12);
+        //rotate 180 degrees
+        robot.setTargetRotation(180);
         robot.navigate(0.2);
 
-        //stop motors
+        //shoot rings into top goal
+        robot.shoot(10);
+
+        //park on the line
+        robot.setTargetFeet(1, 1, 1, 1);
+        robot.navigate(0.6);
+
         robot.stopMotors();
+        robot.finish();
     }
 }
