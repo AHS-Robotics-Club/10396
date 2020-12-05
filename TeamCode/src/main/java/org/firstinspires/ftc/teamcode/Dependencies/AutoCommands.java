@@ -55,7 +55,7 @@ public class AutoCommands extends AutoControlled {
         bR.set(0);
         lift.set(0);
         shooter.set(0);
-        grabber.set(-0.2);
+        grabber.set(1);
 
         imu.init();
         imu.reset();
@@ -74,7 +74,7 @@ public class AutoCommands extends AutoControlled {
         lift.set(0);
         grabber.set(0);
         sleep(300);
-        grabber.set(1);
+        grabber.set(-1);
         sleep(400);
         grabber.set(0);
         sleep(300);
@@ -87,7 +87,7 @@ public class AutoCommands extends AutoControlled {
         lift.set((13/voltageSensor.getVoltage()) * 0.4);
         sleep(500);
         lift.set(0);
-        grabber.set(-1);
+        grabber.set(1);
         sleep(1500);
         lift.set((13/voltageSensor.getVoltage()) * -0.5);
         sleep(1000);
@@ -138,8 +138,8 @@ public class AutoCommands extends AutoControlled {
             shooter.resetEncoder();
             shooter.set(pid.calculate(shooter.getCurrentPosition()));
         }
-
-        for (int i = 0; i < 3; i++){
+        double counter = 0;
+        while (counter < 3 && opModeIsActive()){
             flicker.set(0);
             sleep(300);
             flicker.set(-1);
@@ -150,6 +150,7 @@ public class AutoCommands extends AutoControlled {
             sleep(300);
             flicker.set(0);
             sleep(1000);
+            counter++;
         }
 
         shooter.set(0);
