@@ -61,6 +61,7 @@ public class TeleControlled extends LinearOpMode {
             );
 
             if (gamepad1.y){
+                //tuned shooter value
                 pid.setSetPoint(10);
                 shooter.resetEncoder();
                 shooter.set(pid.calculate(shooter.getCurrentPosition()));
