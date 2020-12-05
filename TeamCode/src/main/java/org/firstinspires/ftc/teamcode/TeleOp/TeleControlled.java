@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.drivebase.MecanumDrive;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
@@ -18,6 +19,7 @@ public class TeleControlled extends LinearOpMode {
     VoltageSensor voltageSensor;
     TeleBot robot;
     CRServo flicker, grabber;
+    PIDController pid;
 
     double speed_multiplier = 1.0;
 
@@ -41,6 +43,8 @@ public class TeleControlled extends LinearOpMode {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
+        pid = new PIDController(0.114, 0.001, 0);
+
         robot = new TeleBot(frontLeft, frontRight, backLeft, backRight, intake, shooter, grabberLift, grabber, imu, flicker);
         robot.initialize();
 
@@ -55,11 +59,9 @@ public class TeleControlled extends LinearOpMode {
             );
 
             if (gamepad1.y){
-                shooter.set((13/voltageSensor.getVoltage()) * 0.52);
-            } else if (gamepad1.a){
-                shooter.set((13/voltageSensor.getVoltage()) * 0.4);
-            } else if (gamepad1.b) {
-                shooter.set((13/voltageSensor.getVoltage()) * 0.5);
+                pid.setSetPoint(10);
+                shooter.resetEncoder();
+                shooter.set(pid.calculate(shooter.getCurrentPosition()));
             } else {
                 shooter.set(0);
             }
@@ -83,30 +85,31 @@ public class TeleControlled extends LinearOpMode {
             }
 
             if (gamepad1.left_bumper){
-                grabberLift.set((13/voltageSensor.getVoltage()) * -0.4);
-                //sleep(1000);
-                //grabberLift.set(0);
+                grabberLift.set((13/voltageSensor.getVoltage()) * 0.4);
+            } else {
+                grabberLift.set(0);
             }
             if (gamepad1.right_bumper){
-                grabberLift.set((13/voltageSensor.getVoltage()) * 0.4);
-                sleep(1000);
+                grabberLift.set((13/voltageSensor.getVoltage()) * -0.5);
+            } else {
                 grabberLift.set(0);
             }
 
-            if (gamepad1.dpad_right){
+            //FIX GRABBER
+            /*grabber.set((13/voltageSensor.getVoltage()) * )
+
+            if (gamepad1.){
                 if (unlocked){
-                    grabber.set(1);
+                    grabber.set((13/voltageSensor.getVoltage()) * 1);
                     unlocked = false;
                 } else {
-                    grabber.set((13/voltageSensor.getVoltage()) * -1);
-                    sleep(1000);
-                    grabber.set(0);
+                    grabber.set((13/voltageSensor.getVoltage()) * -0.2);
                     unlocked = true;
                 }
-            }
+            } else {
+                grabber.set(0);
+            }*/
         }
         m_drive.stop();
     }
-
-
 }
