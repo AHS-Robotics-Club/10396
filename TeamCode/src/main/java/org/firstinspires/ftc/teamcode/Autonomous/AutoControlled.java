@@ -7,7 +7,6 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import org.firstinspires.ftc.teamcode.Dependencies.UGRectDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.teamcode.Dependencies.AutoCommands;
 
@@ -16,7 +15,7 @@ public class AutoControlled extends LinearOpMode {
 
     private Motor frontLeft, frontRight, backLeft, backRight, shooter, intake, grabberLift;
     private CRServo flicker;
-    private Servo grabber;
+    private CRServo grabber;
     public VoltageSensor voltageSensor;
     public UGRectDetector vision;
     private RevIMU imu;
@@ -31,7 +30,7 @@ public class AutoControlled extends LinearOpMode {
         shooter = new Motor(hardwareMap, "shooter");
         intake = new Motor(hardwareMap, "intake");
         grabberLift = new Motor(hardwareMap, "grabberLift");
-        grabber = hardwareMap.servo.get("grabber");
+        grabber = new CRServo(hardwareMap, "grabber");
         flicker = new CRServo(hardwareMap, "flicker");
 
         imu = new RevIMU(hardwareMap, "imu");
@@ -39,9 +38,9 @@ public class AutoControlled extends LinearOpMode {
 
         vision = new UGRectDetector(hardwareMap, "camera");
         vision.init();
-        vision.setTopRectangle(0.47686832740213525, 0.2947686116700201);
-        vision.setBottomRectangle(0.5782918149466192, 0.29979879275653926);
-        vision.setRectangleSize(200, 35);
+        vision.setTopRectangle(0.5486111111111112, 0.29140625);
+        vision.setBottomRectangle(0.6458333333333334, 0.303125);
+        vision.setRectangleSize(220, 40);
 
         AutoCommands robot = new AutoCommands(frontLeft, frontRight, backLeft, backRight, shooter, intake, grabberLift,
                 grabber, flicker, voltageSensor, imu);
