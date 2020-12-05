@@ -61,16 +61,24 @@ public class AutoControlled extends LinearOpMode {
             telemetry.addData("Vision", "4 Rings Detected");
             telemetry.update();
 
+            //strafe 1 feet right
+            robot.setTargetFeet(1, -1, -1, 1);
+            robot.navigate(0.1);
+
             //move forward 10 feet
             robot.setTargetFeet(10, 10, 10, 10);
             robot.navigate(0.6);
+
+            //strafe 1 feet left
+            robot.setTargetFeet(-1, 1, 1, -1);
+            robot.navigate(0.1);
 
             //drop the wobble goal
             robot.dropWobbleGoal();
 
             //move backward 5 feet
             robot.setTargetFeet(-5, -5, -5, -5);
-            robot.navigate(0.6);
+            robot.navigate(0.3);
         }
 
         if (visionDec == 0){
@@ -87,7 +95,7 @@ public class AutoControlled extends LinearOpMode {
 
             //move backward 1 feet
             robot.setTargetFeet(-1, -1, -1, -1);
-            robot.navigate(0.6);
+            robot.navigate(0.3);
         }
 
         if (visionDec == 1){
@@ -95,9 +103,17 @@ public class AutoControlled extends LinearOpMode {
             telemetry.addData("Vision", "1 Ring Detected");
             telemetry.update();
 
+            //strafe 1 feet right
+            robot.setTargetFeet(1, -1, -1, 1);
+            robot.navigate(0.1);
+
             //move forward 8 feet
             robot.setTargetFeet(8, 8, 8, 8);
             robot.navigate(0.6);
+
+            //strafe 1 feet left
+            robot.setTargetFeet(-1, 1, 1, -1);
+            robot.navigate(0.1);
 
             //strafe left 3 feet
             robot.setTargetFeet(-3, 3, 3, -3);
@@ -108,7 +124,7 @@ public class AutoControlled extends LinearOpMode {
 
             //move backward 2.5 feet
             robot.setTargetFeet(-2.5, -2.5, -2.5, -2.5);
-            robot.navigate(0.6);
+            robot.navigate(0.3);
 
             //strafe right 2 feet
             robot.setTargetFeet(3, -3, -3, 3);
@@ -116,7 +132,7 @@ public class AutoControlled extends LinearOpMode {
 
             //move backward 1 feet
             robot.setTargetFeet(-1, -1, -1, -1);
-            robot.navigate(0.6);
+            robot.navigate(0.3);
         }
 
         //strafe left 1 feet
