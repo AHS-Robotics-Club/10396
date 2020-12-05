@@ -206,7 +206,7 @@ public class AutoControlled extends LinearOpMode {
         }*/
 
         //park on the line - REMOVE THIS PART IF WE DECIDE TO DO SECOND WOBBLE GOAL
-        robot.setTargetFeet(1, 1, 1, 1);
+        robot.setTargetFeet(-1, -1, -1, -1);
         robot.navigate(0.6);
 
         //stop motors
