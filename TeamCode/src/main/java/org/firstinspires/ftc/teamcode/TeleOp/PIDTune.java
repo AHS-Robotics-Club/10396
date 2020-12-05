@@ -24,7 +24,7 @@ public class PIDTune extends LinearOpMode {
     TeleBot robot;
     CRServo flicker, grabber;
     PIDController pid = new PIDController(0, 0, 0);
-    GamepadEx gamepad = new GamepadEx(gamepad1);
+    GamepadEx gamepadMain = new GamepadEx(gamepad1);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -51,28 +51,28 @@ public class PIDTune extends LinearOpMode {
         double increment = 0.1;
 
         ButtonReader dpadup = new ButtonReader(
-                gamepad, GamepadKeys.Button.DPAD_UP
+                gamepadMain, GamepadKeys.Button.DPAD_UP
         );
         ButtonReader dpaddown = new ButtonReader(
-                gamepad, GamepadKeys.Button.DPAD_DOWN
+                gamepadMain, GamepadKeys.Button.DPAD_DOWN
         );
         ButtonReader dpadleft = new ButtonReader(
-                gamepad, GamepadKeys.Button.DPAD_LEFT
+                gamepadMain, GamepadKeys.Button.DPAD_LEFT
         );
         ButtonReader dpadright = new ButtonReader(
-                gamepad, GamepadKeys.Button.DPAD_RIGHT
+                gamepadMain, GamepadKeys.Button.DPAD_RIGHT
         );
         ButtonReader leftbumper = new ButtonReader(
-                gamepad, GamepadKeys.Button.LEFT_BUMPER
+                gamepadMain, GamepadKeys.Button.LEFT_BUMPER
         );
         ButtonReader rightbumper = new ButtonReader(
-                gamepad, GamepadKeys.Button.RIGHT_BUMPER
+                gamepadMain, GamepadKeys.Button.RIGHT_BUMPER
         );
         ButtonReader a = new ButtonReader(
-                gamepad, GamepadKeys.Button.A
+                gamepadMain, GamepadKeys.Button.A
         );
         ButtonReader b = new ButtonReader(
-                gamepad, GamepadKeys.Button.B
+                gamepadMain, GamepadKeys.Button.B
         );
 
         while (opModeIsActive() && !isStopRequested()) {
