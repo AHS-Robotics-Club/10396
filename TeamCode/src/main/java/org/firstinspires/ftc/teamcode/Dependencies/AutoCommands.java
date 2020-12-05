@@ -5,13 +5,15 @@ import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.teamcode.Autonomous.AutoControlled;
 
 public class AutoCommands extends AutoControlled {
     private Motor fL, fR, bL, bR;
     private Motor shooter, intake, lift;
-    private CRServo grabber, flicker;
+    private CRServo flicker;
+    private Servo grabber;
     private VoltageSensor voltageSensor;
     private RevIMU imu;
     private PIDController pid;
@@ -21,7 +23,7 @@ public class AutoCommands extends AutoControlled {
     public double kI = 0.001;
     public double kD = 0;
 
-    public AutoCommands(Motor fLM, Motor fRM, Motor bLM, Motor bRM, Motor shooterM, Motor intakeM, Motor lifter, CRServo grab, CRServo flick, VoltageSensor volt, RevIMU imuParam){
+    public AutoCommands(Motor fLM, Motor fRM, Motor bLM, Motor bRM, Motor shooterM, Motor intakeM, Motor lifter, Servo grab, CRServo flick, VoltageSensor volt, RevIMU imuParam){
         fL = fLM;
         fR = fRM;
         bL = bLM;
@@ -54,7 +56,7 @@ public class AutoCommands extends AutoControlled {
         bR.set(0);
         lift.set(0);
         shooter.set(0);
-        grabber.set((13/voltageSensor.getVoltage()) * -0.2);
+        grabber.setPosition(0.9);
 
         imu.init();
         imu.reset();
@@ -71,11 +73,7 @@ public class AutoCommands extends AutoControlled {
         lift.set((13/voltageSensor.getVoltage()) * 0.4);
         sleep(500);
         lift.set(0);
-        grabber.set(0);
-        sleep(300);
-        grabber.set(1);
-        sleep(400);
-        grabber.set(0);
+        grabber.setPosition(0.3);
         sleep(300);
         lift.set((13/voltageSensor.getVoltage()) * -0.5);
         sleep(1000);
