@@ -64,26 +64,32 @@ public class PIDTune extends LinearOpMode {
 
             if (gamepad1.dpad_up){
                 p += increment;
+                pid.setP(p);
                 sleep(500);
             }
             if (gamepad1.dpad_down){
                 p -= increment;
+                pid.setP(p);
                 sleep(500);
             }
             if (gamepad1.dpad_left){
                 i -= increment;
+                pid.setI(i);
                 sleep(500);
             }
             if (gamepad1.dpad_right){
                 i += increment;
+                pid.setI(i);
                 sleep(500);
             }
             if (gamepad1.left_bumper){
                 d -= increment;
+                pid.setD(d);
                 sleep(500);
             }
             if (gamepad1.right_bumper){
                 d += increment;
+                pid.setD(d);
                 sleep(500);
             }
             if (gamepad1.a){
