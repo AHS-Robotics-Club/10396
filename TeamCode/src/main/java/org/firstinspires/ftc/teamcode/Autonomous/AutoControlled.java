@@ -99,19 +99,19 @@ public class AutoControlled extends LinearOpMode {
             robot.setTargetFeet(8, 8, 8, 8);
             robot.navigate(0.6);
 
-            //strafe left 2 feet
-            robot.setTargetFeet(-2, 2, 2, -2);
+            //strafe left 3 feet
+            robot.setTargetFeet(-3, 3, 3, -3);
             robot.navigate(0.1);
 
             //drop the wobble goal
             robot.dropWobbleGoal();
 
-            //move backward 2 feet
-            robot.setTargetFeet(-2, -2, -2, -2);
+            //move backward 2.5 feet
+            robot.setTargetFeet(-2.5, -2.5, -2.5, -2.5);
             robot.navigate(0.6);
 
             //strafe right 2 feet
-            robot.setTargetFeet(2, -2, -2, 2);
+            robot.setTargetFeet(3, -3, -3, 3);
             robot.navigate(0.1);
 
             //move backward 1 feet
@@ -120,7 +120,7 @@ public class AutoControlled extends LinearOpMode {
         }
 
         //strafe left 1 feet
-        robot.setTargetFeet(-1, 1, 1,-1);
+        robot.setTargetFeet(-1.5, 1.5, 1.5,-1.5);
         robot.navigate(0.1);
 
         //get shooter up to speed
@@ -128,7 +128,7 @@ public class AutoControlled extends LinearOpMode {
 
         //rotate 180 degrees
         robot.setTargetRotation(180);
-        robot.navigate(0.2);
+        robot.navigate(0.4);
 
         //shoot rings into top goal
         robot.shoot(8.5);
