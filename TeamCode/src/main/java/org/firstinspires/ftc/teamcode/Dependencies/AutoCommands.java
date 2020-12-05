@@ -5,7 +5,6 @@ import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.teamcode.Autonomous.AutoControlled;
 
@@ -13,7 +12,7 @@ public class AutoCommands extends AutoControlled {
     private Motor fL, fR, bL, bR;
     private Motor shooter, intake, lift;
     private CRServo flicker;
-    private Servo grabber;
+    private CRServo grabber;
     private VoltageSensor voltageSensor;
     private RevIMU imu;
     private PIDController pid;
@@ -23,7 +22,7 @@ public class AutoCommands extends AutoControlled {
     public double kI = 0.001;
     public double kD = 0;
 
-    public AutoCommands(Motor fLM, Motor fRM, Motor bLM, Motor bRM, Motor shooterM, Motor intakeM, Motor lifter, Servo grab, CRServo flick, VoltageSensor volt, RevIMU imuParam){
+    public AutoCommands(Motor fLM, Motor fRM, Motor bLM, Motor bRM, Motor shooterM, Motor intakeM, Motor lifter, CRServo grab, CRServo flick, VoltageSensor volt, RevIMU imuParam){
         fL = fLM;
         fR = fRM;
         bL = bLM;
@@ -56,7 +55,7 @@ public class AutoCommands extends AutoControlled {
         bR.set(0);
         lift.set(0);
         shooter.set(0);
-        grabber.setPosition(0.9);
+        grabber.set(-0.2);
 
         imu.init();
         imu.reset();
@@ -73,8 +72,23 @@ public class AutoCommands extends AutoControlled {
         lift.set((13/voltageSensor.getVoltage()) * 0.4);
         sleep(500);
         lift.set(0);
-        grabber.setPosition(0.3);
+        grabber.set(0);
         sleep(300);
+        grabber.set(1);
+        sleep(400);
+        grabber.set(0);
+        sleep(300);
+        lift.set((13/voltageSensor.getVoltage()) * -0.5);
+        sleep(1000);
+        lift.set(0);
+    }
+
+    public void pickUpWobbleGoal(){
+        lift.set((13/voltageSensor.getVoltage()) * 0.4);
+        sleep(500);
+        lift.set(0);
+        grabber.set(-1);
+        sleep(1500);
         lift.set((13/voltageSensor.getVoltage()) * -0.5);
         sleep(1000);
         lift.set(0);
@@ -117,7 +131,7 @@ public class AutoCommands extends AutoControlled {
         shooter.set((13/voltageSensor.getVoltage()) * 0.52);
     }
 
-    public void shoot(int speed){
+    public void shoot(double speed){
         long startTime = System.currentTimeMillis();
         while((System.currentTimeMillis() - startTime) < 5000 && opModeIsActive()) {
             pid.setSetPoint(speed);
@@ -150,8 +164,15 @@ public class AutoCommands extends AutoControlled {
 
     public double[] getForwardSpeed(double speed, Motor m){
         double[] powers = new double[2];
-        powers[0] = Math.max(0.15, (speed + (0-(imu.getHeading()/60))) * (1-(Math.abs(m.getCurrentPosition() - ((double)m.motor.getTargetPosition()/2)))/((double)m.motor.getTargetPosition()/2)));
-        powers[1] = Math.max(0.15, (speed - (0-(imu.getHeading()/60))) * (1-(Math.abs(m.getCurrentPosition() - ((double)m.motor.getTargetPosition()/2)))/((double)m.motor.getTargetPosition()/2)));
+        powers[0] = Math.max(0.15, (speed + (0-(imu.getHeading()/60))) * (1-(Math.abs(Math.abs(m.getCurrentPosition()) - Math.abs(((double)m.motor.getTargetPosition()/2))))/Math.abs(((double)m.motor.getTargetPosition()/2))));
+        powers[1] = Math.max(0.15, (speed - (0-(imu.getHeading()/60))) * (1-(Math.abs(Math.abs(m.getCurrentPosition()) - Math.abs(((double)m.motor.getTargetPosition()/2))))/Math.abs(((double)m.motor.getTargetPosition()/2))));
+        return powers;
+    }
+
+    public double[] getBackwardSpeed(double speed, Motor m){
+        double[] powers = new double[2];
+        powers[0] = Math.min(-0.15, (speed + (0-(imu.getHeading()/60))));
+        powers[1] = Math.min(-0.15, (speed - (0-(imu.getHeading()/60))));
         return powers;
     }
 
@@ -169,10 +190,10 @@ public class AutoCommands extends AutoControlled {
         while (fL.motor.isBusy() || fR.motor.isBusy() || bL.motor.isBusy() || bR.motor.isBusy() && opModeIsActive()){
             if (fL.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() < 0 && bL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0) {
                 //backward
-                fR.set(-speed);
-                bL.set(-speed);
-                bR.set(-speed);
-                fL.set(-speed);
+                fR.set(getBackwardSpeed(-speed, fR)[0]);
+                bL.set(getBackwardSpeed(-speed, bL)[1]);
+                bR.set(getBackwardSpeed(-speed, bR)[0]);
+                fL.set(getBackwardSpeed(-speed, fL)[1]);
             } else if (fL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 & bL.motor.getTargetPosition() > 0) {
                 //strafe left
                 fR.set(speed);
@@ -212,10 +233,10 @@ public class AutoCommands extends AutoControlled {
 
     public void setInitialSpeed(double speed){
         if (fL.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() < 0 && bL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0) {
-            fR.set(-speed);
-            bL.set(-speed);
-            bR.set(-speed);
-            fL.set(-speed);
+            fR.set(getBackwardSpeed(-speed, fR)[0]);
+            bL.set(getBackwardSpeed(-speed, bL)[1]);
+            bR.set(getBackwardSpeed(-speed, bR)[0]);
+            fL.set(getBackwardSpeed(-speed, fL)[1]);
         } else if (fL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 & bL.motor.getTargetPosition() > 0) {
             fR.set(speed);
             bL.set(speed);
