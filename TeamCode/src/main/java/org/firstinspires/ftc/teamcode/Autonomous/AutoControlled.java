@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.teamcode.Dependencies.AutoCommands;
 
-@Autonomous(name="Autonomous")
+@Autonomous(name="FookingGetItLads")
 public class AutoControlled extends LinearOpMode {
 
     private Motor frontLeft, frontRight, backLeft, backRight, shooter, intake, grabberLift;
@@ -61,46 +61,42 @@ public class AutoControlled extends LinearOpMode {
             //telemetry for vision
             telemetry.addData("Vision", "4 Rings Detected");
             telemetry.update();
-
-            //strafe 1 feet right
-            robot.setTargetFeet(1, -1, -1, 1);
-            robot.navigate(0.1);
-
+            robot.setTargetFeet(-2.5, 2.5, 2.5,-2.5);
+            robot.navigate(0.15);
+            robot.setTargetFeet(2.5, -4, -4 ,4);
+            robot.navigate(0.15);
             //move forward 10 feet
             robot.setTargetFeet(10, 10, 10, 10);
             robot.navigate(0.6);
-
-            //strafe 1 feet left
-            robot.setTargetFeet(-1, 1, 1, -1);
-            robot.navigate(0.1);
-
-            //drop the wobble goal
             robot.dropWobbleGoal();
-
-            //move backward 5 feet
-            robot.setTargetFeet(-5, -5, -5, -5);
-            robot.navigate(0.3);
         }
 
         if (visionDec == 0){
+            grabber.setPosition(0);
+            robot.setTargetFeet(-2.5, 2.5, 2.5,-2.5);
+            robot.navigate(0.15);
+            robot.setTargetFeet(2.5, -2.5, -2.5,2.5);
+            robot.navigate(0.15);
             //telemetry for vision
             telemetry.addData("Vision", "0 Rings Detected");
             telemetry.update();
 
             //move forward 6 feet
-            robot.setTargetFeet(6, 6, 6, 6);
+            robot.setTargetFeet(7, 7, 7, 7);
             robot.navigate(0.6);
 
             //drop the wobble goal
             robot.dropWobbleGoal();
 
-            //move backward 1 feet
-            robot.setTargetFeet(-1, -1, -1, -1);
-            robot.navigate(0.3);
+
         }
 
         if (visionDec == 1){
             //telemetry for vision
+            robot.setTargetFeet(-2.5, 2.5, 2.5,-2.5);
+            robot.navigate(0.15);
+            robot.setTargetFeet(2.5, -2.5, -2.5,2.5);
+            robot.navigate(0.15);
             telemetry.addData("Vision", "1 Ring Detected");
             telemetry.update();
 
@@ -110,104 +106,16 @@ public class AutoControlled extends LinearOpMode {
 
             //move forward 8 feet
             robot.setTargetFeet(8, 8, 8, 8);
-            robot.navigate(0.6);
-
-            //strafe 1 feet left
-            robot.setTargetFeet(-1, 1, 1, -1);
-            robot.navigate(0.1);
+            robot.navigate(0.3);
 
             //strafe left 3 feet
-            robot.setTargetFeet(-3, 3, 3, -3);
-            robot.navigate(0.1);
-
-            //drop the wobble goal
-            robot.dropWobbleGoal();
-
-            //move backward 2.5 feet
-            robot.setTargetFeet(-2.5, -2.5, -2.5, -2.5);
+            robot.setTargetFeet(-4, 4, 4, -4);
             robot.navigate(0.3);
 
-            //strafe right 2 feet
-            robot.setTargetFeet(3, -3, -3, 3);
-            robot.navigate(0.1);
-
-            //move backward 1 feet
-            robot.setTargetFeet(-1, -1, -1, -1);
-            robot.navigate(0.3);
-        }
-
-        //strafe left 1 feet
-        robot.setTargetFeet(-1.5, 1.5, 1.5,-1.5);
-        robot.navigate(0.1);
-
-        //get shooter up to speed
-        robot.prepShooter();
-
-        //rotate 180 degrees
-        robot.setTargetRotation(180);
-        robot.navigate(0.4);
-
-        //shoot rings into top goal
-        robot.shoot(8.5);
-
-        /*//strafe left 27 inches
-        robot.setTargetInches(-27, 27, 27, -27);
-        robot.navigate(0.1);
-
-        //move backward 5 feet
-        robot.setTargetFeet(-5, -5, -5, -5);
-        robot.navigate(0.6);
-
-        //pick up second wobble goal
-        robot.pickUpWobbleGoal();
-
-        //strafe right 39 inches
-        robot.setTargetInches(39, -39, -39, 39);
-        robot.navigate(0.1);
-
-        //place second wobble goal based on vision
-        if (visionDec == 4){
-            //move forward 10 feet
-            robot.setTargetFeet(10, 10, 10, 10);
-            robot.navigate(0.6);
-
-            //drop the wobble goal
-            robot.dropWobbleGoal();
-
-            //move backward 4 feet
-            robot.setTargetFeet(-4, -4, -4, -4);
-            robot.navigate(0.6);
-        }
-
-        if (visionDec == 0){
-            //move forward 6 feet
-            robot.setTargetFeet(6, 6, 6, 6);
-            robot.navigate(0.6);
-
             //drop the wobble goal
             robot.dropWobbleGoal();
         }
 
-        if (visionDec == 1){
-            //move forward 8 feet
-            robot.setTargetFeet(8, 8, 8, 8);
-            robot.navigate(0.6);
-
-            //strafe left 2 feet
-            robot.setTargetFeet(-2, 2, 2, -2);
-            robot.navigate(0.1);
-
-            //drop the wobble goal
-            robot.dropWobbleGoal();
-
-            //move backward 2 feet
-            robot.setTargetFeet(-2, -2, -2, -2);
-            robot.navigate(0.6);
-        }*/
-
-        //park on the line - REMOVE THIS PART IF WE DECIDE TO DO SECOND WOBBLE GOAL
-        robot.setTargetFeet(1, 1, 1, 1);
-        robot.navigate(0.6);
 
         //stop motors
         robot.stopMotors();

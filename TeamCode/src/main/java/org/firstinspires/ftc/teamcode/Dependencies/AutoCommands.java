@@ -73,13 +73,6 @@ public class AutoCommands extends AutoControlled {
         lift.set((13/voltageSensor.getVoltage()) * 0.4);
         sleep(500);
         lift.set(0);
-        grabber.setPosition(1);
-        sleep(300);
-        grabber.setPosition(0);
-        sleep(400);
-        grabber.setPosition(1);
-        sleep(300);
-        lift.set((13/voltageSensor.getVoltage()) * -0.5);
         sleep(1000);
         lift.set(0);
     }
@@ -139,8 +132,8 @@ public class AutoCommands extends AutoControlled {
             shooter.resetEncoder();
             shooter.set(pid.calculate(shooter.getCurrentPosition()));
         }
-
-        for (int i = 0; i < 3; i++){
+        double counter = 0;
+        while (counter < 3 && opModeIsActive()){
             flicker.set(0);
             sleep(300);
             flicker.set(-1);
@@ -151,6 +144,7 @@ public class AutoCommands extends AutoControlled {
             sleep(300);
             flicker.set(0);
             sleep(1000);
+            counter++;
         }
 
         shooter.set(0);
@@ -191,22 +185,27 @@ public class AutoCommands extends AutoControlled {
         while (fL.motor.isBusy() || fR.motor.isBusy() || bL.motor.isBusy() || bR.motor.isBusy() && opModeIsActive()){
             if (fL.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() < 0 && bL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0) {
                 //backward
-                fR.set(getBackwardSpeed(-speed, fR)[0]);
-                bL.set(getBackwardSpeed(-speed, bL)[1]);
-                bR.set(getBackwardSpeed(-speed, bR)[0]);
-                fL.set(getBackwardSpeed(-speed, fL)[1]);
-            } else if (fL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 & bL.motor.getTargetPosition() > 0) {
-                //strafe left
-                fR.set(speed);
-                bL.set(speed);
+                fR.set(-speed);
+                bL.set(-speed);
                 bR.set(-speed);
                 fL.set(-speed);
-            } else if (fL.motor.getTargetPosition() > 0 && bR.motor.getTargetPosition() > 0 && fR.motor.getTargetPosition() < 0 & bL.motor.getTargetPosition() < 0) {
-                //strafe right
+
+                //fR.set(getBackwardSpeed(-speed, fR)[0]);
+                //bL.set(getBackwardSpeed(-speed, bL)[1]);
+                //bR.set(getBackwardSpeed(-speed, bR)[0]);
+                //fL.set(getBackwardSpeed(-speed, fL)[1]);
+            } else if (fL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 & bL.motor.getTargetPosition() > 0) {
+                //strafe left
                 fR.set(-speed);
                 bL.set(-speed);
                 bR.set(speed);
                 fL.set(speed);
+            } else if (fL.motor.getTargetPosition() > 0 && bR.motor.getTargetPosition() > 0 && fR.motor.getTargetPosition() < 0 & bL.motor.getTargetPosition() < 0) {
+                //strafe right
+                fR.set(speed);
+                bL.set(speed);
+                bR.set(-speed);
+                fL.set(-speed);
             } else if (fL.motor.getTargetPosition() < 0 && bL.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 && bR.motor.getTargetPosition() > 0) {
                 //rotate left
                 fR.set(speed);
@@ -234,10 +233,10 @@ public class AutoCommands extends AutoControlled {
 
     public void setInitialSpeed(double speed){
         if (fL.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() < 0 && bL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0) {
-            fR.set(getBackwardSpeed(-speed, fR)[0]);
-            bL.set(getBackwardSpeed(-speed, bL)[1]);
-            bR.set(getBackwardSpeed(-speed, bR)[0]);
-            fL.set(getBackwardSpeed(-speed, fL)[1]);
+            fR.set(-speed);
+            bL.set(-speed);
+            bR.set(-speed);
+            fL.set(-speed);
         } else if (fL.motor.getTargetPosition() < 0 && bR.motor.getTargetPosition() < 0 && fR.motor.getTargetPosition() > 0 & bL.motor.getTargetPosition() > 0) {
             fR.set(speed);
             bL.set(speed);

@@ -42,7 +42,7 @@ public class TeleBot {
         intake.set(0);
         lifter.set(0);
 
-        grabber.setPosition(1);
+        grabber.setPosition(0);
         flick.set(0);
 
         fL.resetEncoder();
